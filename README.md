@@ -1,6 +1,6 @@
 # The UMPGGK's tournament server
 
-The UMPGGK is a series of tournaments, in which students, phd, assistants and professors can compete by implementing the best AI player that plays a particular game.
+The UMPGGK is a series of tournaments, in which students, phd, assistants and professors can compete by implementing the best AI player that plays a particular logic game.
 
 ### The 2017 edition
 
