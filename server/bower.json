@@ -1,0 +1,6 @@
+{
+    "name": "umpggk-server",
+    "dependencies": {
+        "socket.io-client ": "2.0.3"
+    }
+}

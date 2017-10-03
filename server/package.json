@@ -1,6 +1,8 @@
 {
     "dependencies": {
         "config": "latest",
-        "http-server": "latest"
+        "http-server": "latest",
+        "socket.io": "2.0.3",
+        "bower": "latest"
     }
 }

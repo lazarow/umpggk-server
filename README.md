@@ -8,6 +8,7 @@ To run the server (and the web app as well) use:
 ```
 cd server
 npm install // required, only if you haven't done that already
+./node_modules/bower/bin/bower install // required, only if you haven't done that already
 node server.js
 ```
 Those command should runthe server on the port 6789 (default) and the web app on the port 8000 (default).

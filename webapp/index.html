@@ -6,8 +6,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
   </head>
   <body>
     OK
+    <script>
+      var socket = io();
+      socket.on('test', function (data) {
+        console.log(data);
+      })
+    </script>
   </body>
 </html>
