@@ -3,8 +3,7 @@ var http = require("http");
 
 var WebAppServer = function () {};
 
-WebAppServer.prototype.start = function () {
-    const port = config.get('WebAppServer.port');
+WebAppServer.prototype.start = function (port) {
     this.server = http.createServer((request, response) => {
         response.end('OK')
     });

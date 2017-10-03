@@ -3,16 +3,17 @@ var config = require("config");
 
 var CompetitionServer = function () {};
 
-CompetitionServer.prototype.start = function () {
-    const port = config.get("CompetitionServer.port");
+CompetitionServer.prototype.start = function (port) {
     this.server = net.createServer();
     this.server.listen(port);
     this.server.on("connection", function (socket) {
         var remote = socket.remoteAddress + ":" + socket.remotePort;
         console.log("A new connection: " + remote);
+        // TODO: Handle a new connection
         socket.on("data", function(data) {
             const message = Buffer.isBuffer(data) ? data.toString().trim() : data.trim();
             console.log("The message from " + remote, message);
+            // TODO: Handle messages
             socket.write("OK");
         });
         socket.on("close", function(data) {
