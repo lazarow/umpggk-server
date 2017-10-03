@@ -16,7 +16,8 @@ WebAppServer.prototype.start = function (options) {
             console.log('The websocket disconnection...');
         });
     });
-    console.log("The web app server is listening on " + this.server.server.address().address + ":" + this.server.server.address().port);
+    console.log("The web app server is listening on " + this.server.server.address().address + ":"
+        + this.server.server.address().port);
 };
 
 module.exports = new WebAppServer();

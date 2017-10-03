@@ -3,6 +3,8 @@
         "config": "latest",
         "http-server": "latest",
         "socket.io": "2.0.3",
-        "bower": "latest"
+        "bower": "latest",
+        "node-di-container": "latest",
+        "shortid": "latest"
     }
 }
