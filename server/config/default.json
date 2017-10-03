@@ -1,0 +1,8 @@
+{
+    "CompetitionServer": {
+        "port": 6789
+    },
+    "WebAppServer": {
+        "port": 8000
+    }
+}
