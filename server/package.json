@@ -1,5 +1,6 @@
 {
     "dependencies": {
-        "config": "latest"
+        "config": "latest",
+        "http-server": "latest"
     }
 }

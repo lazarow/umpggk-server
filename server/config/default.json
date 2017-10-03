@@ -3,6 +3,7 @@
         "port": 6789
     },
     "WebAppServer": {
+        "path": "./../webapp",
         "port": 8000
     }
 }

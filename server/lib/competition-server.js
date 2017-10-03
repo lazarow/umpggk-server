@@ -1,11 +1,11 @@
-var net = require("net");
-var config = require("config");
+var net = require("net"),
+    config = require("config");
 
 var CompetitionServer = function () {};
 
-CompetitionServer.prototype.start = function (port) {
+CompetitionServer.prototype.start = function (options) {
     this.server = net.createServer();
-    this.server.listen(port);
+    this.server.listen(options.port);
     this.server.on("connection", function (socket) {
         var remote = socket.remoteAddress + ":" + socket.remotePort;
         console.log("A new connection: " + remote);
