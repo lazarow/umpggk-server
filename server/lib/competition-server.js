@@ -9,21 +9,36 @@ CompetitionServer.prototype.start = function (options) {
     this.server = net.createServer();
     this.server.listen(options.port);
     this.server.on("connection", function (socket) {
-        var remote = socket.remoteAddress + ":" + socket.remotePort;
+        var initiator = socket.remoteAddress + ":" + socket.remotePort;
+        /*
+            Add an ID to every new socket connection.
+            The ID will be used to associate a socket with a player. 
+        */
         socket.id = shortid.generate();
-        console.log("A new connection: " + remote);
-        // TODO: Handle a new connection
+        // sockets[socket.id] = socket
+        console.log(
+            "The new connection has been established by the initiator " + initiator,
+            "The initiator has get the ID " + socket.id
+        );
+        /*
+            Handles received data.
+        */
         socket.on("data", function(data) {
             const message = Buffer.isBuffer(data) ? data.toString().trim() : data.trim(),
-                splitted = message.split(" ");
-            console.log("The message from " + remote, message);
-            if (injector.get('Command').execute.apply(splitted) !== true) {
+                splitted = message.split(" "),
+                code = splitted[0]
+                options = splitted.slice(1);
+            console.log("The message from " + initiator, message);
+            if (injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options)) !== true) {
                 console.log("The provided command is unknown: " + splitted[0]);
             }
             socket.write("OK");
         });
-        socket.on("close", function(data) {
-            console.log("The connection is closed: " + remote);
+        /*
+            Handles the connection lost.
+        */
+        socket.on("close", function() {
+            console.log("The connection is lost from the initiator" + initiator);
         });
     });
     console.log("The competition server is listening on " + this.server.address().address + ":"

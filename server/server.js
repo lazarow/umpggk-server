@@ -4,8 +4,8 @@ var config = require("config")
     webAppServer = require("./lib/webapp-server.js");
 
 container.value("codes", {
-    "NPLY": 100,    // connect a new player
-    "MMOV": 210     // make a move
+    "NPLY": '100',    // connect a new player
+    "MMOV": '210'     // make a move
 });
 container.value("Command", require("./lib/command.js"));
 
