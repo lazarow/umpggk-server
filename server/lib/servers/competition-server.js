@@ -1,9 +1,10 @@
 const
-    net         = require("net"),
-    config      = require("config"),
-    shortid     = require('shortid'),
-    injector    = require("./../container/injector.js"),
-    sockets     = require("./sockets.js");
+    net                 = require("net"),
+    config              = require("config"),
+    shortid             = require('shortid'),
+    injector            = require("./../container/injector.js"),
+    sockets             = require("./sockets.js"),
+    playersRepository   = require("./../repositories/players-repository.js");
 
 const CompetitionServer = function () {};
 
@@ -37,6 +38,7 @@ CompetitionServer.prototype.start = function (options) {
             Handles the connection lost.
         */
         socket.on("close", function() {
+            playersRepository.disconnect(this.id);
             delete sockets[this.id];
             console.log("The connection is lost from the initiator " + initiator);
         });
