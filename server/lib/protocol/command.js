@@ -1,6 +1,6 @@
-var injector = require('./injector.js')
+const injector = require('./../container/injector.js')
 
-var Command = function () {};
+const Command = function () {};
 
 Command.prototype[injector.get('codes').NPLY] = function (id, name) {
     injector.get('io').emit('test', 'OK!');

@@ -1,16 +1,18 @@
-const config = require("config")
-    container = require('./lib/container.js'),
-    competitionServer = require("./lib/competition-server.js"),
-    webAppServer = require("./lib/webapp-server.js"),
-    low = require('lowdb')
-    DbAdapter = require('./lib/db-adapter.js');
+const
+    config              = require("config"),
+    low                 = require('lowdb')
+    container           = require('./lib/container/container.js'),
+    competitionServer   = require("./lib/servers/competition-server.js"),
+    webAppServer        = require("./lib/serverswebapp-server.js"),
+    DbAdapter           = require('./lib/db/adapter.js');
 
 container.value("codes", {
     "NPLY": '100',    // connect a new player
     "MMOV": '210'     // make a move
 });
-container.value("Command", require("./lib/command.js"));
+container.value("Command", require("./lib/protocol/command.js"));
 
+// Start servers
 competitionServer.start(config.get("CompetitionServer"));
 webAppServer.start(config.get("WebAppServer"));
 
@@ -19,8 +21,7 @@ const currentDate = new Date();
 const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
     + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
     + currentDate.getMilliseconds() + ".json";
-const adapter = new DbAdapter('./../saves/' + filename);
-const db = low(adapter);
+const db = low(new Adapter('./../saves/' + filename));
 db.defaults(config.get("EmptyDatabase")).write();
 container.value("db", db);
 

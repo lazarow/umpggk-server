@@ -1,10 +1,11 @@
-const FileSync = require('lowdb/adapters/FileSync'),
-    fs = require('graceful-fs'),
-    injector = require("./injector.js");
+const
+    FileSync    = require("lowdb/adapters/FileSync"),
+    fs          = require("graceful-fs"),
+    injector    = require("./../container/injector.js");
 
 const writeFile = fs.writeFileSync;
 
-class DbAdapter extends FileSync {
+class Adapter extends FileSync {
     constructor(source) {
         super(source);
         console.log("The custom DB adapter based on FileSync has been created");
@@ -19,4 +20,4 @@ class DbAdapter extends FileSync {
     }
 }
 
-module.exports = DbAdapter;
+module.exports = Adapter;

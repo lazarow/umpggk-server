@@ -1,9 +1,10 @@
-var net = require("net"),
-    config = require("config"),
-    injector = require("./injector.js"),
-    shortid = require('shortid');
+const
+    net         = require("net"),
+    config      = require("config"),
+    shortid     = require('shortid'),
+    injector    = require("./../container/injector.js");
 
-var CompetitionServer = function () {};
+const CompetitionServer = function () {};
 
 CompetitionServer.prototype.start = function (options) {
     this.server = net.createServer();
@@ -12,7 +13,7 @@ CompetitionServer.prototype.start = function (options) {
         var initiator = socket.remoteAddress + ":" + socket.remotePort;
         /*
             Add an ID to every new socket connection.
-            The ID will be used to associate a socket with a player. 
+            The ID will be used to associate a socket with a player.
         */
         socket.id = shortid.generate();
         // sockets[socket.id] = socket

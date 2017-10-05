@@ -1,9 +1,10 @@
-var config = require("config"),
-    HttpServer = require("http-server").HttpServer,
-    SocketIoServer = require('socket.io'),
-    container = require('./container.js');
+const
+    config          = require("config"),
+    HttpServer      = require("http-server").HttpServer,
+    SocketIoServer  = require('socket.io'),
+    container       = require('./../container/container.js');
 
-var WebAppServer = function () {};
+const WebAppServer = function () {};
 
 WebAppServer.prototype.start = function (options) {
     this.httpServer = new HttpServer({
