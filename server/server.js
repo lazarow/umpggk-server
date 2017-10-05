@@ -3,8 +3,8 @@ const
     low                 = require('lowdb')
     container           = require('./lib/container/container.js'),
     competitionServer   = require("./lib/servers/competition-server.js"),
-    webAppServer        = require("./lib/serverswebapp-server.js"),
-    DbAdapter           = require('./lib/db/adapter.js');
+    webAppServer        = require("./lib/servers/webapp-server.js"),
+    Adapter           = require('./lib/db/adapter.js');
 
 container.value("codes", {
     "NPLY": '100',    // connect a new player
