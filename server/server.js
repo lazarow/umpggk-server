@@ -17,17 +17,11 @@ webAppServer.start(config.get("WebAppServer"));
 // Creating a database connector
 const currentDate = new Date();
 const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
-    + "__" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+    + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
     + currentDate.getMilliseconds() + ".json";
 const adapter = new DbAdapter('./../saves/' + filename);
-const db = low(adapter)
-db.defaults({
-    tournament: {},
-    players: [],
-    rounds: [],
-    matches: [],
-    games: []
-}).write();
+const db = low(adapter);
+db.defaults(config.get("EmptyDatabase")).write();
 container.value("db", db);
 
 // TODO: Tworzenie turnieju, koniecznie po uruchomieniu WebApp

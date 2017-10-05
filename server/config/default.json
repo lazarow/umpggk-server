@@ -5,5 +5,12 @@
     "WebAppServer": {
         "path": "./../webapp",
         "port": 8000
+    },
+    "EmptyDatabase": {
+        "tournament": {},
+        "players": [],
+        "rounds": [],
+        "matches": [],
+        "games": []
     }
 }
