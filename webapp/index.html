@@ -7,12 +7,42 @@
     <meta name="author" content="">
     <title></title>
     <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
+    <script src="https://unpkg.com/vue"></script>
   </head>
   <body>
+    <div id="tournament-app">
+      <ol>
+        <li v-for="player in players">
+          {{ player.name }} || {{player.points}}
+        </li>
+      </ol>
+    </div>
     <script>
-      var socket = io();
+      var app = new Vue({
+          el: "#tournament-app",
+          data: {
+              players: []
+          }
+      })
+
+    </script>
+
+    <script>
+      let socket = io();
       socket.on('test', function (data) {
         console.log(data);
+      });
+
+
+      socket.on('data',function(data){
+          let db = JSON.parse(data);
+          console.log(db);
+          console.log(db.players);
+
+
+          //app.players = app.players.concat(db.players);
+          app.players = db.players;
+
       })
     </script>
   </body>

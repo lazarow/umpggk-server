@@ -10,12 +10,16 @@ class Adapter extends FileSync {
         super(source);
         console.log("The custom DB adapter based on FileSync has been created");
     }
+
     write(data) {
+
+        /*result return undefined?? */
         let result = writeFile(this.source, this.serialize(data));
-        if (result) {
-            //injector.get('io').emit('test', 'OK!');
-            // TODO: Implementacja wysylki na Socket.IO
-        }
+
+        injector.get('io').emit('data',this.serialize(data));
+        //injector.get('io').emit('test', 'OK!');
+        // TODO: Implementacja wysylki na Socket.IO
+
         return result;
     }
 }
