@@ -3,15 +3,7 @@ var injector = require('./injector.js')
 var Command = function () {};
 
 Command.prototype[injector.get('codes').NPLY] = function (id, name) {
-    let players = [];
-    players.forEach(player => {
-        if (player.name === name) {
-            
-            player.connected = true;
-            player.id = id;
-        }
-    });
-
+    injector.get('io').emit('test', 'OK!');
     console.log("A new player command from " + id + " with name " + name);
     return true;
 };

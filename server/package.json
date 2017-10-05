@@ -5,6 +5,7 @@
         "socket.io": "2.0.3",
         "bower": "latest",
         "node-di-container": "latest",
-        "shortid": "latest"
+        "shortid": "latest",
+        "lowdb": "latest"
     }
 }

@@ -26,7 +26,7 @@ CompetitionServer.prototype.start = function (options) {
         socket.on("data", function(data) {
             const message = Buffer.isBuffer(data) ? data.toString().trim() : data.trim(),
                 splitted = message.split(" "),
-                code = splitted[0]
+                code = splitted[0],
                 options = splitted.slice(1);
             console.log("The message from " + initiator, message);
             if (injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options)) !== true) {

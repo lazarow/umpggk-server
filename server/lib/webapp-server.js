@@ -1,23 +1,25 @@
 var config = require("config"),
     HttpServer = require("http-server").HttpServer,
-    SocketIoServer = require('socket.io');
+    SocketIoServer = require('socket.io'),
+    container = require('./container.js');
 
 var WebAppServer = function () {};
 
 WebAppServer.prototype.start = function (options) {
-    this.server = new HttpServer({
+    this.httpServer = new HttpServer({
         root: options.path
     });
-    const io = new SocketIoServer(this.server.server);
-    this.server.listen(options.port);
+    this.httpServer.listen(options.port);
+    const io = new SocketIoServer(this.httpServer.server);
+    container.value('io', io);
     io.on('connection', function (socket) {
         console.log('A new websocket connection...');
         socket.on('disconnect', function () {
             console.log('The websocket disconnection...');
         });
     });
-    console.log("The web app server is listening on " + this.server.server.address().address + ":"
-        + this.server.server.address().port);
+    console.log("The web app server is listening on " + this.httpServer.server.address().address + ":"
+        + this.httpServer.server.address().port);
 };
 
 module.exports = new WebAppServer();
