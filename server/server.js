@@ -1,15 +1,11 @@
 const
     config              = require("config"),
-    low                 = require('lowdb')
     container           = require('./lib/container/container.js'),
     competitionServer   = require("./lib/servers/competition-server.js"),
     webAppServer        = require("./lib/servers/webapp-server.js"),
-    Adapter           = require('./lib/db/adapter.js');
+    databaseService     = require("./lib/db/database-service.js");
 
-container.value("codes", {
-    "NPLY": '100',    // connect a new player
-    "MMOV": '210'     // make a move
-});
+// Load commands protocol
 container.value("Command", require("./lib/protocol/command.js"));
 
 // Start servers
@@ -17,12 +13,7 @@ competitionServer.start(config.get("CompetitionServer"));
 webAppServer.start(config.get("WebAppServer"));
 
 // Creating a database connector
-const currentDate = new Date();
-const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
-    + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
-    + currentDate.getMilliseconds() + ".json";
-const db = low(new Adapter('./../saves/' + filename));
-db.defaults(config.get("EmptyDatabase")).write();
-container.value("db", db);
+databaseService.createConnector();
+databaseService.createEmptyDatabase();
 
 // TODO: Tworzenie turnieju, koniecznie po uruchomieniu WebApp

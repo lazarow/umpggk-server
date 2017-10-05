@@ -2,10 +2,16 @@ const injector = require('./../container/injector.js')
 
 const Command = function () {};
 
-Command.prototype[injector.get('codes').NPLY] = function (id, name) {
+// Register a new player
+Command.prototype['100'] = function (id, name) {
     injector.get('io').emit('test', 'OK!');
     console.log("A new player command from " + id + " with name " + name);
     return true;
+};
+
+// Make a move
+Command.prototype['200'] = function () {
+    return false;
 };
 
 Command.prototype.execute = function (code) {
