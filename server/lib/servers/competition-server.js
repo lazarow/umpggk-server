@@ -2,7 +2,8 @@ const
     net         = require("net"),
     config      = require("config"),
     shortid     = require('shortid'),
-    injector    = require("./../container/injector.js");
+    injector    = require("./../container/injector.js"),
+    sockets     = require("./sockets.js");
 
 const CompetitionServer = function () {};
 
@@ -10,17 +11,14 @@ CompetitionServer.prototype.start = function (options) {
     this.server = net.createServer();
     this.server.listen(options.port);
     this.server.on("connection", function (socket) {
-        var initiator = socket.remoteAddress + ":" + socket.remotePort;
         /*
             Add an ID to every new socket connection.
             The ID will be used to associate a socket with a player.
         */
         socket.id = shortid.generate();
-        // sockets[socket.id] = socket
-        console.log(
-            "The new connection has been established by the initiator " + initiator,
-            "The initiator has get the ID " + socket.id
-        );
+        const initiator = socket.id + "@" + socket.remoteAddress + ":" + socket.remotePort;
+        sockets[socket.id] = socket;
+        console.log("The new connection has been established by the initiator " + initiator);
         /*
             Handles received data.
         */
@@ -29,17 +27,18 @@ CompetitionServer.prototype.start = function (options) {
                 splitted = message.split(" "),
                 code = splitted[0],
                 options = splitted.slice(1);
-            console.log("The message from " + initiator, message);
+            console.log("The message from the " + initiator + ": " + message);
             if (injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options)) !== true) {
-                console.log("The provided command is unknown: " + splitted[0]);
+                socket.write("999 The transmitted command is unknown");
+                console.log("The transmitted by " + initiator  + " command " + code + " is unknown");
             }
-            socket.write("OK");
         });
         /*
             Handles the connection lost.
         */
         socket.on("close", function() {
-            console.log("The connection is lost from the initiator" + initiator);
+            delete sockets[this.id];
+            console.log("The connection is lost from the initiator " + initiator);
         });
     });
     console.log("The competition server is listening on " + this.server.address().address + ":"
