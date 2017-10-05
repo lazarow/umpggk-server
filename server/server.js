@@ -15,7 +15,11 @@ competitionServer.start(config.get("CompetitionServer"));
 webAppServer.start(config.get("WebAppServer"));
 
 // Creating a database connector
-const adapter = new DbAdapter('./db.json'); // TODO: Generacja nazwy
+const currentDate = new Date();
+const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
+    + "__" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+    + currentDate.getMilliseconds() + ".json";
+const adapter = new DbAdapter('./../saves/' + filename);
 const db = low(adapter)
 db.defaults({
     tournament: {},
