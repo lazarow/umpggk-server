@@ -3,6 +3,7 @@ const
     HttpServer      = require("http-server").HttpServer,
     SocketIoServer  = require('socket.io'),
     container       = require('./../container/container.js');
+    repositories    = require('./../repositories/repositories');
 
 const WebAppServer = function () {};
 
@@ -12,6 +13,8 @@ WebAppServer.prototype.start = function (options) {
     });
     this.httpServer.listen(options.port);
     const io = new SocketIoServer(this.httpServer.server);
+
+
     container.value('io', io);
     io.on('connection', function (socket) {
         console.log('A new websocket connection...');

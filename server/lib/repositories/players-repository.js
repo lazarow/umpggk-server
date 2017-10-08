@@ -1,8 +1,10 @@
 const Repository = require("./Repository.js");
+        injector = require("./../container/injector.js");
+
 
 class PlayersRepository extends Repository {
     isRegistered(name) {
-        return this.db.get('players').find({name: name}).value() != undefined;
+        return this.db.get('players').find({name: name}).value() !== undefined;
     }
     register(name, socketId) {
         return this.db.get("players").push({

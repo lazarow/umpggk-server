@@ -7,10 +7,24 @@
     <meta name="author" content="">
     <title></title>
     <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
-    <script src="https://unpkg.com/vue"></script>
+    <script src="public/bower/vue/dist/vue.js"></script>
+    <script src="public/bower/vue-router/dist/vue-router.js"></script>
+
   </head>
   <body>
-    <div id="tournament-app">
+  <div id="webapp">
+    {{message}}
+  </div>
+  <script>
+      let app = new Vue({
+
+          el: '#webapp',
+          data: {
+              message: 'Hello Vue!'
+          }
+      });
+  </script>
+ <!--   <div id="tournament-app">
       <ol>
         <li v-for="player in players">
           {{ player.name }} || {{player.points}}
@@ -44,6 +58,7 @@
           app.players = db.players;
 
       })
-    </script>
+    </script>-->
   </body>
+<!--<script  src="public/vue-app/main.js"></script>-->
 </html>
