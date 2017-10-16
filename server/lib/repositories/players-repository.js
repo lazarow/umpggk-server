@@ -10,10 +10,15 @@ class PlayersRepository extends Repository {
         return this.db.get("players").push({
             name: name,
             socketId: socketId,
-            connected: true,
-            connectedAt: (new Date()).getTime(),
+            connected: false,
+            connectedAt: null,
             points: 0,
+            currentGame: null,
+            currentOpponent: null,
+            currentMatch: null,
+            deadline: null,
             games: [],
+            matches: [],
             opponents: []
         }).write();
     }
