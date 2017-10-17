@@ -5,11 +5,11 @@ injector = require("./../container/injector.js");
 class MatchesRepository extends Repository {
 
     generateId(){
-        return this.db.get("matches").length + 1
+        return this.db.get("matches").size();
     }
 
     addMatchToPlayer(playerName,matchId){
-          this.db.get("players").find({name: playerName}).matches.push(matchId).write();
+          this.db.get("players").find({name: playerName}).get("matches").push(matchId).write();
     }
 
     start(bluePlayerName,redPlayerName) {

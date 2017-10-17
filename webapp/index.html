@@ -23,16 +23,30 @@
   <div id="webapp">
     <h2>UMPGGK tournament</h2>
 
+    <ul>
+      <li v-for="player in players">
+        {{ player.name }} || {{player.socketId}}
+      </li>
+    </ul>
   </div>
   <script>
       let app = new Vue({
           el: '#webapp',
-          data: {}
+          data: {
+              players: []
+          }
       });
 
       const  socket = io();
       socket.on('data',function(data){
-          app.data = JSON.parse(data);
+          let dataa = JSON.parse(data);
+          console.log(dataa.players);
+
+          app.players.length = 0;
+          dataa.players.forEach(function (playerObj) {
+             app.players.push(playerObj);
+          });
+
       })
     </script>
   </body>

@@ -23,11 +23,7 @@ Command.prototype['200'] = function () {
 };
 
 Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
-    console.log('command : 600');
-    console.log(nameTwo);
-    console.log(nameOne);
-    console.log(playersRepository.isRegistered(nameOne));
-    console.log(playersRepository.isRegistered(nameTwo));
+
     if(playersRepository.isRegistered(nameOne) && playersRepository.isRegistered(nameTwo)){
 
         matchesRepository.start(nameOne,nameTwo);

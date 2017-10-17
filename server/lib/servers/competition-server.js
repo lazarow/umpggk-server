@@ -33,6 +33,36 @@ CompetitionServer.prototype.start = function (options) {
                 socket.write("999 The transmitted command is unknown");
                 console.log("The transmitted by " + initiator  + " command " + code + " is unknown");
             }
+
+
+             setInterval(function () {
+             let currentDate = new Date();
+             let filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
+             + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+             + currentDate.getMilliseconds();
+             injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
+             },1)
+            setInterval(function () {
+                let currentDate = new Date();
+                let filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
+                    + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+                    + currentDate.getMilliseconds();
+                injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
+            },2)
+            setInterval(function () {
+                let currentDate = new Date();
+                let filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
+                    + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+                    + currentDate.getMilliseconds();
+                injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
+            },3)
+            setInterval(function () {
+                let currentDate = new Date();
+                let filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
+                    + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
+                    + currentDate.getMilliseconds();
+                injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
+            },4)
         });
         /*
             Handles the connection lost.
