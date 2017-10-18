@@ -6,13 +6,49 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title></title>
+    <link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.css">
+
+    <!--move scripts to bottom-->
+    <script src="public/bower/jquery/dist/jquery.js"></script>
+    <script src="public/bower/tether/dist/js/tether.js"></script>
+    <script src="public/bower/tether/dist/css/tether.css"></script>
+    <script src="public/bower/bootstrap/dist/js/bootstrap.js"></script>
     <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
+    <script src="public/bower/vue/dist/vue.js"></script>
+    <script src="public/bower/vue-router/dist/vue-router.js"></script>
+    <script src="public/bower/requirejs/require.js"></script>
+
   </head>
   <body>
-    <script>
-      var socket = io();
-      socket.on('test', function (data) {
-        console.log(data);
+  <div id="webapp">
+    <h2>UMPGGK tournament</h2>
+
+    <ul>
+      <li v-for="player in players">
+        {{ player.name }} || {{player.socketId}}
+      </li>
+    </ul>
+  </div>
+  <script>
+      let app = new Vue({
+          el: '#webapp',
+          data: {
+              "tournament": {},
+              "players": [],
+              "rounds": [],
+              "matches": [],
+              "games": []
+          }
+      });
+
+      const  socket = io();
+      socket.on('data',function(response){
+          console.log(response);
+          //data = JSON.parse(response);
+          let table = response.table;
+          let action = response.action;
+          let dataRecived = response.data;
+          app[table].push(dataRecived);
       })
     </script>
   </body>

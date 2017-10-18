@@ -33,6 +33,13 @@ CompetitionServer.prototype.start = function (options) {
                 socket.write("999 The transmitted command is unknown");
                 console.log("The transmitted by " + initiator  + " command " + code + " is unknown");
             }
+
+
+             /*setInterval(function () {
+             let currentDate = new Date();
+             let filename = currentDate.getMilliseconds();
+             injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
+             },1000)*/
         });
         /*
             Handles the connection lost.
