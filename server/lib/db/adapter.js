@@ -16,7 +16,7 @@ class Adapter extends FileSync {
         /*result return undefined?? */
         let result = writeFile(this.source, this.serialize(data));
 
-        injector.get('io').emit('data',this.serialize(data));
+        //injector.get('io').emit('data',this.serialize(data));
         //injector.get('io').emit('test', 'OK!');
         // TODO: Implementacja wysylki na Socket.IO
 

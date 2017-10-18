@@ -7,7 +7,7 @@ class PlayersRepository extends Repository {
         return this.db.get('players').find({name: name}).value() !== undefined;
     }
     register(name, socketId) {
-        return this.db.get("players").push({
+        this.db.get("players").push({
             name: name,
             socketId: socketId,
             connected: false,
@@ -21,6 +21,11 @@ class PlayersRepository extends Repository {
             matches: [],
             opponents: []
         }).write();
+
+        this.emitChange("players", "push", {
+            name,
+            socketId
+        })
     }
     reconnect(name, socketId) {
         return this.db.get('players').find({name: name}).assign({

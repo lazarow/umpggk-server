@@ -33,20 +33,22 @@
       let app = new Vue({
           el: '#webapp',
           data: {
-              players: []
+              "tournament": {},
+              "players": [],
+              "rounds": [],
+              "matches": [],
+              "games": []
           }
       });
 
       const  socket = io();
-      socket.on('data',function(data){
-          let dataa = JSON.parse(data);
-          console.log(dataa.players);
-
-          app.players.length = 0;
-          dataa.players.forEach(function (playerObj) {
-             app.players.push(playerObj);
-          });
-
+      socket.on('data',function(response){
+          console.log(response);
+          //data = JSON.parse(response);
+          let table = response.table;
+          let action = response.action;
+          let dataRecived = response.data;
+          app[table].push(dataRecived);
       })
     </script>
   </body>

@@ -3,6 +3,7 @@ const
     playersRepository   = require("./../repositories/players-repository.js");
     matchesRepository   = require("./../repositories/match-repository.js");
 
+
 const Command = function () {};
 
 // Register a new player
@@ -27,6 +28,7 @@ Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
     if(playersRepository.isRegistered(nameOne) && playersRepository.isRegistered(nameTwo)){
 
         matchesRepository.start(nameOne,nameTwo);
+
         console.log("A new match between " + nameOne + " and " + nameTwo +" has been started");
     }
     return true;
