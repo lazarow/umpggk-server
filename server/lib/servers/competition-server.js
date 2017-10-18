@@ -35,13 +35,11 @@ CompetitionServer.prototype.start = function (options) {
             }
 
 
-             setInterval(function () {
+             /*setInterval(function () {
              let currentDate = new Date();
-             let filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
-             + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
-             + currentDate.getMilliseconds();
+             let filename = currentDate.getMilliseconds();
              injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
-             },1000)
+             },1000)*/
         });
         /*
             Handles the connection lost.

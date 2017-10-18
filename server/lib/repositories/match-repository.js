@@ -2,7 +2,7 @@ const Repository = require("./Repository.js");
 injector = require("./../container/injector.js");
 
 
-class MatchesRepository extends Repository {
+class MatchRepository extends Repository {
 
     generateId(){
         return this.db.get("matches").size();
@@ -38,4 +38,4 @@ class MatchesRepository extends Repository {
 
 }
 
-module.exports = new MatchesRepository();
+module.exports = new MatchRepository();

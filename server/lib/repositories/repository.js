@@ -8,6 +8,7 @@ class Repository {
     constructor() {
         this.setIo(io);
         this.setDb(db);
+        
         this.emitChange = function (table,action,data) {
             injector.get('io').emit('data', {
                 table,

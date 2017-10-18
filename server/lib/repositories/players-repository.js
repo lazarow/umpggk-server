@@ -2,7 +2,7 @@ const Repository = require("./Repository.js");
         injector = require("./../container/injector.js");
 
 
-class PlayersRepository extends Repository {
+class PlayerRepository extends Repository {
     isRegistered(name) {
         return this.db.get('players').find({name: name}).value() !== undefined;
     }
@@ -43,4 +43,4 @@ class PlayersRepository extends Repository {
     }
 }
 
-module.exports = new PlayersRepository();
+module.exports = new PlayerRepository();

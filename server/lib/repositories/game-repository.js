@@ -16,19 +16,26 @@ class GameRepository extends Repository {
         return this.db.get("matches").find({matchId:matchId}).get("games").push(gameId).write();
     }
 
-    start(){
+    start(whiteId, blackId){
+
+        let gameId = this.generateId();
+
         this.db.get("games").push({
-            white: null,        // Identyfikator pierwszego gracza int
-            black: null,        // Identyfikator drugiego gracza int
-            winner: null,       // Identyfikator zwyciescy int
-            loser: null,        // Identyfikator przegranego int
-            isFinished: false,  // Czy gra jest zakończona? true|false
-            startedAt: null,    // Czas rozpoczecia gry unixtimestamp
-            finishedAt: null,   // Czas skończenia gry unixtimestamp
-            duration: null,     // Sumaryczny czas gry
-            state: null,        // Obecny stan gry (np. plansza) object
-            moves: []           // Lista wykonanych w grze ruchow int[]
+            gameId: gameId,
+            white: whiteId,
+            black: blackId,
+            winner: null,
+            loser: null,
+            isFinished: false,
+            startedAt: Date.now(),
+            finishedAt: null,
+            duration: null,
+            state: null,
+            moves: []
         }).write();
+
+        /*add to match*/
+        /*add to player*/
     }
 
 }
