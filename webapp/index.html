@@ -14,6 +14,7 @@
     <script src="public/bower/tether/dist/css/tether.css"></script>
     <script src="public/bower/bootstrap/dist/js/bootstrap.js"></script>
     <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
+    <script src="public/bower/lodash/dist/lodash.js"></script>
     <script src="public/bower/vue/dist/vue.js"></script>
     <script src="public/bower/vue-router/dist/vue-router.js"></script>
     <script src="public/bower/requirejs/require.js"></script>
@@ -23,25 +24,306 @@
   <div id="webapp">
     <h2>UMPGGK tournament</h2>
 
-    <ul>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <table class="table table-hover table-sm">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Gracz</th>
+              <th>Punkty</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+             <!-- <player v-for="player in scoreboard(players)"></player>-->
+            </tr>
+            <tr v-for="player in scoreboard(players)">
+              <td>{{player.playerId}}</td>
+              <td>{{player.name}}</td>
+              <td>{{player.points}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col">
+
+        </div>
+      </div>
+    </div>
+
+    <!--<ul>
       <li v-for="player in players">
         {{ player.name }} || {{player.socketId}}
       </li>
-    </ul>
+    </ul>-->
   </div>
   <script>
+
+
+
       let app = new Vue({
           el: '#webapp',
           data: {
               "tournament": {},
-              "players": [],
-              "rounds": [],
-              "matches": [],
-              "games": []
+              "players": [
+                  {
+                      playerId:1,
+                  "name": "ok",
+                  "socketId": null,
+                  "connected": false,
+                  "connectedAt": null,
+                  "points": 3,
+                  "currentGame": null,
+                  "currentOpponent": null,
+                  "currentMatch": null,
+                  "deadline": null,
+                  "games": [],
+                  "matches": [
+                      1,
+                      3
+                  ],
+                  "opponents": []
+              },
+                  {
+                      playerId:2,
+                      "name": "pp",
+                      "socketId": "HJYOgJMa-",
+                      "connected": false,
+                      "connectedAt": null,
+                      "points": 1,
+                      "currentGame": null,
+                      "currentOpponent": null,
+                      "currentMatch": null,
+                      "deadline": null,
+                      "games": [],
+                      "matches": [
+                          1,
+                          4
+                      ],
+                      "opponents": []
+                  },
+                  {
+                      playerId:3,
+                      "name": "ola",
+                      "socketId": "HJYOgJMa-",
+                      "connected": false,
+                      "connectedAt": null,
+                      "points": 2,
+                      "currentGame": null,
+                      "currentOpponent": null,
+                      "currentMatch": null,
+                      "deadline": null,
+                      "games": [],
+                      "matches": [
+                          2,
+                          3
+                      ],
+                      "opponents": []
+                  },
+                  {
+                      playerId:4,
+                      "name": "maciek",
+                      "socketId": "HJYOgJMa-",
+                      "connected": false,
+                      "connectedAt": null,
+                      "points": 5,
+                      "currentGame": null,
+                      "currentOpponent": null,
+                      "currentMatch": null,
+                      "deadline": null,
+                      "games": [],
+                      "matches": [
+                          2,
+                          4
+                      ],
+                      "opponents": []
+                  }],
+              "rounds": [
+                  {
+                      roundId:1,
+                      startedAt: 1508139135856,
+                      finishedAt: null,
+                      duration: null,
+                      matches: [1,2]
+                },
+                  {
+                      roundId:2,
+                      startedAt: 1508139155791,
+                      finishedAt: null,
+                      duration: null,
+                      matches: [3,4]
+                  }
+              ],
+              "matches": [
+                  {
+                      "matchId": 1,
+                      "red": "ok",
+                      "blue": "pp",
+                      "redPoints": 1,
+                      "bluePoints": 1,
+                      "isFinished": false,
+                      "startedAt": 1508139135856,
+                      "finishedAt": null,
+                      "duration": null,
+                      "games": [1,2]
+                  },
+                  {
+                      "matchId": 2,
+                      "red": "ola",
+                      "blue": "maciek",
+                      "redPoints": 2,
+                      "bluePoints": 0,
+                      "isFinished": false,
+                      "startedAt": 1508139150479,
+                      "finishedAt": null,
+                      "duration": null,
+                      "games": [3,4]
+                  },
+                  {
+                      "matchId": 3,
+                      "red": "ola",
+                      "blue": "ok",
+                      "redPoints": 0,
+                      "bluePoints": 2,
+                      "isFinished": false,
+                      "startedAt": 1508139155791,
+                      "finishedAt": null,
+                      "duration": null,
+                      "games": [5,6]
+                  },
+                  {
+                      "matchId": 4,
+                      "red": "maciek",
+                      "blue": "pp",
+                      "redPoints": 2,
+                      "bluePoints": 0,
+                      "isFinished": false,
+                      "startedAt": 1508139159863,
+                      "finishedAt": null,
+                      "duration": null,
+                      "games": [7,8]
+                  }
+              ],
+              "games": [
+                  {
+                      gameId: 1,
+                      white: "ok",
+                      black: "pp",
+                      winner: "ok",
+                      loser: "pp",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [10,49,34,13,54,98,38]
+                  },
+                  {
+                      gameId: 2,
+                      white: "pp",
+                      black: "ok",
+                      winner: "ok",
+                      loser: "pp",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [11,49,34,55,54,40,38]
+                  },
+                  {
+                      gameId: 3,
+                      white: "ola",
+                      black: "maciek",
+                      winner: "ola",
+                      loser: "maciek",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [10,49,34,13,54,98,38]
+                  },
+                  {
+                      gameId: 4,
+                      white: "maciek",
+                      black: "ola",
+                      winner: "ola",
+                      loser: "maciek",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [11,49,34,55,54,40,38]
+                  },
+                  {
+                      gameId: 5,
+                      white: "ola",
+                      black: "ok",
+                      winner: "ok",
+                      loser: "ola",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [10,49,34,13,54,98,38]
+                  },
+                  {
+                      gameId: 6,
+                      white: "ok",
+                      black: "ola",
+                      winner: "ok",
+                      loser: "ola",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [11,49,34,55,54,40,38]
+                  },
+                  {
+                      gameId: 7,
+                      white: "maciek",
+                      black: "pp",
+                      winner: "maciek",
+                      loser: "pp",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [10,49,34,13,54,98,38]
+                  },
+                  {
+                      gameId: 8,
+                      white: "pp",
+                      black: "maciek",
+                      winner: "maciek",
+                      loser: "pp",
+                      isFinished: false,
+                      startedAt: null,
+                      finishedAt: null,
+                      duration: null,
+                      state: "done",
+                      moves: [11,49,34,55,54,40,38]
+                  },
+              ]
+          },
+          methods: {
+              scoreboard: function (players) {
+                  return _.orderBy(players,['points','name'],['desc'])
+              }
           }
       });
 
       const  socket = io();
+      /*testing*/
       socket.on('data',function(response){
           console.log(response);
           //data = JSON.parse(response);

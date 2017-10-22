@@ -1,4 +1,4 @@
-const Repository = require("./Repository.js");
+const Repository = require("./repository.js");
 injector = require("./../container/injector.js");
 
 
