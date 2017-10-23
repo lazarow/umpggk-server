@@ -38,14 +38,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-             <!-- <player v-for="player in scoreboard(players)"></player>-->
-            </tr>
-            <tr v-for="player in scoreboard(players)">
-              <td>{{player.playerId}}</td>
-              <td>{{player.name}}</td>
-              <td>{{player.points}}</td>
-            </tr>
+              <tr is="player" v-for="player in scoreboard(players)" :key="player.playerId" :player="player"></tr>
             </tbody>
           </table>
         </div>
@@ -54,15 +47,16 @@
         </div>
       </div>
     </div>
-
-    <!--<ul>
-      <li v-for="player in players">
-        {{ player.name }} || {{player.socketId}}
-      </li>
-    </ul>-->
   </div>
+
+
   <script>
 
+
+      Vue.component('player',{
+          props: ['player'],
+          template: '<tr><td>{{player.playerId}}</td><td>{{player.name}}</td><td>{{player.points}}</td></tr>'
+      });
 
 
       let app = new Vue({
