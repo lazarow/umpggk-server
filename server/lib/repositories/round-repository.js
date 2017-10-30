@@ -10,6 +10,7 @@ class RoundRepository extends Repository {
 
     addRoundToTournament(roundId){
         this.db.get("tournament").get("rounds").push(roundId).write();
+
     }
 
     start() {

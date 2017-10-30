@@ -28,21 +28,23 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
+          <!--table with scoreboard-->
           <table class="table table-hover table-sm">
             <thead>
             <tr>
               <th>#</th>
               <th>Gracz</th>
               <th>Punkty</th>
-              <th>Status</th>
             </tr>
             </thead>
             <tbody>
               <tr is="player" v-for="player in scoreboard(players)" :key="player.playerId" :player="player"></tr>
             </tbody>
           </table>
+
         </div>
         <div class="col">
+          <!--tabela meczy-->
           <table class="table table-hover table-sm">
             <thead>
             <tr>
@@ -54,7 +56,54 @@
             </tr>
             </thead>
             <tbody>
-            <tr is="match" v-for="match in roundMatches(1)" :key="match.matchId" :match="match"></tr>
+            <tr is="match" v-for="match in roundMatches(ui.match)" :key="match.matchId" :match="match"></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col">
+          <table class="table table-hover table-sm">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>White</th>
+              <th>Black</th>
+              <th>Winner</th>
+              <th>Moves</th>
+              <th>End</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  v-for="game in games">
+              <td>{{game.gameId}}</td>
+              <td>{{game.white}}</td>
+              <td>{{game.black}}</td>
+              <td>{{game.winner}}</td>
+              <td>{{game.moves}}</td>
+              <td>{{game.isFinished}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col">
+          <table class="table table-hover table-sm">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>red</th>
+              <th>blue</th>
+              <th>startedAt</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  v-for="match in matches">
+              <td>#</td>
+              <td>{{match.red}}</td>
+              <td>{{match.blue}}</td>
+              <td>{{match.startedAt}}</td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -68,7 +117,9 @@
 
       Vue.component('player',{
           props: ['player'],
-          template: '<tr><td>{{player.playerId}}</td><td>{{player.name}}</td><td>{{player.points}}</td></tr>'
+          template: '<tr><td>{{player.playerId}}</td>' +
+          '<td>{{player.name}}</td>' +
+          '<td>{{player.points}}</td></tr>'
       });
       Vue.component('match',{
           props: ['match'],
@@ -101,7 +152,7 @@
           data: {
               "tournament": {},
               "players": [
-                  {
+                 /* {
                       playerId:1,
                   "name": "ok",
                   "socketId": null,
@@ -172,9 +223,10 @@
                           4
                       ],
                       "opponents": []
-                  }],
+                  }*/
+                  ],
               "rounds": [
-                  {
+                 /* {
                       roundId:1,
                       startedAt: 1508139135856,
                       finishedAt: null,
@@ -187,10 +239,10 @@
                       finishedAt: null,
                       duration: null,
                       matches: [3,4]
-                  }
+                  }*/
               ],
               "matches": [
-                  {
+               /*   {
                       "matchId": 1,
                       "red": "ok",
                       "blue": "pp",
@@ -237,10 +289,10 @@
                       "finishedAt": null,
                       "duration": null,
                       "games": [7,8]
-                  }
+                  }*/
               ],
               "games": [
-                  {
+                 /* {
                       gameId: 1,
                       white: "ok",
                       black: "pp",
@@ -343,18 +395,29 @@
                       duration: null,
                       state: "done",
                       moves: [11,49,34,55,54,40,38]
-                  },
-              ]
+                  },*/
+              ],
+              "ui":{
+                  player:null,
+                  round:null,
+                  match:0,
+                  game:null,
+              }
           },
           methods: {
               scoreboard: function (players) {
                   return _.orderBy(players,['points','name'],['desc'])
               },
               roundMatches: function (roundNumber) {
-                  let round = _.find(this.rounds,{roundId : roundNumber});
-                  return _.filter(this.matches, function(match){
-                     return  _.includes(round.matches,match.matchId)
-                  })
+                  if(roundNumber){
+                      let round = _.find(this.rounds,{roundId : roundNumber});
+                      return _.filter(this.matches, function(match){
+                          return  _.includes(round.matches,match.matchId)
+                      })
+                  } else {
+                      return this.matches
+                  }
+
               }
           }
       });
@@ -362,12 +425,67 @@
       const  socket = io();
       /*testing*/
       socket.on('data',function(response){
-          console.log(response);
-          //data = JSON.parse(response);
-          let table = response.table;
-          let action = response.action;
-          let dataRecived = response.data;
-          app[table].push(dataRecived);
+
+          /*big piece on ugly code :D*/
+
+          /*if this works i go to drink...*/
+
+          if(response.action !== "assign"){
+              if(response.filter){
+                  let filter = response.filter;
+                  let value = response.value;
+                  if(response.get){
+                      app[response.table].find(function(obj){
+                          return obj[filter] === value;
+                      })[response.get][response.action](response.data);
+                      return;
+                  }
+                  app[response.table].find(function(obj){
+                      return obj[filter] === value;
+                  })[response.action](response.data);
+
+                  return;
+              }
+              if(response.get){
+                  app[response.table][response.get][response.action](response.data);
+                  return;
+              }
+              app[response.table][response.action](response.data);
+          }
+          else {
+              if(response.filter){
+                  let filter = response.filter;
+                  let filterValue = response.value;
+
+                  if(response.get){
+                      _.forIn(response.data,function(value,key){
+                          app[response.table].find(function(obj){
+                              return obj[filter] === filterValue;
+                          })[response.get][key] = value;
+                      });
+                      return;
+                  }
+
+                  _.forIn(response.data,function(value,key){
+                      app[response.table].find(function(obj){
+                          return obj[filter] === filterValue;
+                      })[key] = value;
+                  });
+                  return;
+              }
+              if(response.get){
+                  _.forIn(response.data,function(value,key){
+                      app[response.table][response.get][key] = value;
+                  });
+                  return;
+              }
+              _.forIn(response.data,function(value,key){
+                  app[response.table][key] = value;
+              });
+
+
+          }
+
       })
     </script>
   </body>

@@ -10,6 +10,14 @@ class MatchRepository extends Repository {
 
     addMatchToPlayer(playerName,matchId){
           this.db.get("players").find({name: playerName}).get("matches").push(matchId).write();
+          this.emitChange({
+              table:"players",
+              filter:"name",
+              value: playerName,
+              get: "matches",
+              action: "push",
+              data: matchId
+          })
     }
 
     start(bluePlayerName,redPlayerName) {
@@ -18,7 +26,7 @@ class MatchRepository extends Repository {
 
         let matchId = this.generateId();
 
-        this.db.get("matches").push({
+        let matchObject = {
             matchId: matchId,
             red: bluePlayerName,
             blue: redPlayerName,
@@ -29,7 +37,15 @@ class MatchRepository extends Repository {
             finishedAt: null,
             duration: null,
             games: []
-        }).write();
+        };
+
+        this.db.get("matches").push(matchObject).write();
+
+        this.emitChange({
+            table:"matches",
+            action: "push",
+            data: matchObject
+        });
 
         this.addMatchToPlayer(bluePlayerName,matchId);
         this.addMatchToPlayer(redPlayerName,matchId);

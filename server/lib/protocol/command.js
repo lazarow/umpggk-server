@@ -2,6 +2,7 @@ const
     injector            = require('./../container/injector.js'),
     playersRepository   = require("./../repositories/players-repository.js");
     matchesRepository   = require("./../repositories/match-repository.js");
+    gameRepository   = require("./../repositories/game-repository.js");
 
 
 const Command = function () {};
@@ -19,8 +20,37 @@ Command.prototype['100'] = function (socketId, name) {
 };
 
 // Make a move
-Command.prototype['200'] = function () {
+Command.prototype['200'] = function (sockedId,move) {
+
+    let playerName = playersRepository.getName(sockedId);
+
+    let latestGame = playersRepository.latestGame(playerName);
+
+    //console.log(latestGame);
+
+    console.log(latestGame.isFinished);
+
+    /*check if in game*/
+    if(!latestGame){
+        console.log("Player have no game");
+        return false;
+    }
+
+    /*check if players turn*/
+
+    /*make a move*/
+
+    /*send response to sender*/
+
+    /*send move to opponent*/
+
+    //gameRepository.move(playerName,move);
+
     return false;
+};
+
+Command.prototype['500'] = function(socketId,playerOne,playerTwo) {
+    gameRepository.start(playerOne,playerTwo,1);
 };
 
 Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
@@ -31,6 +61,12 @@ Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
 
         console.log("A new match between " + nameOne + " and " + nameTwo +" has been started");
     }
+
+    /*
+    gameRepository.start('ola','marek',1);
+    gameRepository.move(sockedId,1);
+    */
+
     return true;
 };
 
