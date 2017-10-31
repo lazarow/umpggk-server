@@ -27,7 +27,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col">
+        <div class="col-12 col-md">
           <!--table with scoreboard-->
           <table class="table table-hover table-sm">
             <thead>
@@ -43,7 +43,7 @@
           </table>
 
         </div>
-        <div class="col">
+        <div class="col col-md">
           <!--tabela meczy-->
           <table class="table table-hover table-sm">
             <thead>
@@ -59,6 +59,13 @@
             <tr is="match" v-for="match in roundMatches(ui.match)" :key="match.matchId" :match="match"></tr>
             </tbody>
           </table>
+        </div>
+        <div class="col-2 col-md-2">
+          <select v-model="ui.match" title="round">
+            <option disabled value="">Please select one</option>
+            <option value="0">All</option>
+            <option v-for="round in rounds">{{round.roundId}}</option>
+          </select>
         </div>
 
       </div>
@@ -226,7 +233,7 @@
                   }*/
                   ],
               "rounds": [
-                 /* {
+                  {
                       roundId:1,
                       startedAt: 1508139135856,
                       finishedAt: null,
@@ -239,7 +246,7 @@
                       finishedAt: null,
                       duration: null,
                       matches: [3,4]
-                  }*/
+                  }
               ],
               "matches": [
                /*   {
@@ -409,9 +416,15 @@
                   return _.orderBy(players,['points','name'],['desc'])
               },
               roundMatches: function (roundNumber) {
-                  if(roundNumber){
-                      let round = _.find(this.rounds,{roundId : roundNumber});
+                  if(roundNumber != 0){
+                      console.log(roundNumber);
+                      console.log("this.rounds");
+                      console.log(this.rounds);
+
+                      let round = _.find(this.rounds, function(round) { return round.roundId == roundNumber; });
                       return _.filter(this.matches, function(match){
+                          console.log(round);
+                          console.log("----");
                           return  _.includes(round.matches,match.matchId)
                       })
                   } else {
@@ -486,6 +499,14 @@
 
           }
 
+      })
+
+      socket.on('database',function (response) {
+          app.tournament = response.tournament;
+          app.players = response.players;
+          app.rounds = response.rounds;
+          app.matches = response.matches;
+          app.games = response.games;
       })
     </script>
   </body>
