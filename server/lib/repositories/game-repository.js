@@ -5,8 +5,14 @@ injector = require("./../container/injector.js");
 class GameRepository extends Repository {
 
 
-    generateId(){
+    /*generateId(){
         return this.db.get("games").size();
+    }*/
+
+    *generateId(){
+        let id = 0;
+        while(true)
+            yield id++
     }
 
     addGameToPlayer(playerName,gameId){
@@ -35,7 +41,8 @@ class GameRepository extends Repository {
 
     start(whiteName, blackName, matchId){
 
-        let gameId = this.generateId();
+        let gameId = this.generateId().next().value;
+        /*let gameId = (Math.random()*100).toFixed(0);*/
 
         let gameObject = {
             gameId: gameId,
@@ -64,11 +71,12 @@ class GameRepository extends Repository {
         /*add game to games players array*/
         this.addGameToPlayer(blackName,gameId);
         this.addGameToPlayer(whiteName,gameId);
+
+        return Math.random() > 0.5
     };
 
     winningMove(){
         /*logic for winning move TODO*/
-        console.log('randomWinner');
         return Math.random() > 0.2;
     }
 

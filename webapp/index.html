@@ -233,7 +233,7 @@
                   }*/
                   ],
               "rounds": [
-                  {
+/*                  {
                       roundId:1,
                       startedAt: 1508139135856,
                       finishedAt: null,
@@ -246,7 +246,7 @@
                       finishedAt: null,
                       duration: null,
                       matches: [3,4]
-                  }
+                  }*/
               ],
               "matches": [
                /*   {
@@ -416,15 +416,9 @@
                   return _.orderBy(players,['points','name'],['desc'])
               },
               roundMatches: function (roundNumber) {
-                  if(roundNumber != 0){
-                      console.log(roundNumber);
-                      console.log("this.rounds");
-                      console.log(this.rounds);
-
-                      let round = _.find(this.rounds, function(round) { return round.roundId == roundNumber; });
+                  if(roundNumber !== 0){
+                      let round = _.find(this.rounds, function(round) { return round.roundId === roundNumber; });
                       return _.filter(this.matches, function(match){
-                          console.log(round);
-                          console.log("----");
                           return  _.includes(round.matches,match.matchId)
                       })
                   } else {
@@ -438,6 +432,7 @@
       const  socket = io();
       /*testing*/
       socket.on('data',function(response){
+          console.log("Emit: "+ (new Date()).getTime());
 
           /*big piece on ugly code :D*/
 

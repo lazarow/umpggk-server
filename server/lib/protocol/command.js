@@ -3,6 +3,7 @@ const
     playersRepository   = require("./../repositories/players-repository.js");
     matchesRepository   = require("./../repositories/match-repository.js");
     gameRepository   = require("./../repositories/game-repository.js");
+    roundRepository   = require("./../repositories/round-repository");
 
 
 const Command = function () {};
@@ -44,13 +45,15 @@ Command.prototype['200'] = function (sockedId,move) {
 
     /*send move to opponent*/
 
-    //gameRepository.move(playerName,move);
+    gameRepository.move(playerName,move);
 
-    return false;
+    return true;
 };
 
 Command.prototype['500'] = function(socketId,playerOne,playerTwo) {
     gameRepository.start(playerOne,playerTwo,1);
+
+    return true;
 };
 
 Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
@@ -68,6 +71,15 @@ Command.prototype['600'] = function(sockedId, nameOne, nameTwo) {
     */
 
     return true;
+};
+
+/*admin commands*/
+
+Command.prototype['300'] = function(socketId){
+
+    roundRepository.start();
+    return true;
+
 };
 
 Command.prototype.execute = function (code) {
