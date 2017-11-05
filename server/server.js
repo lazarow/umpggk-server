@@ -9,7 +9,7 @@ const
 container.value("Command", require("./lib/protocol/command.js"));
 
 // Start servers
-competitionServer.start(config.get("CompetitionServer"));
+competitionServer.start(config.get("TournamentServer"));
 webAppServer.start(config.get("WebAppServer"));
 
 // Creating a database connector

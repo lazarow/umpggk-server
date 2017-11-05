@@ -1,5 +1,5 @@
 {
-    "CompetitionServer": {
+    "TournamentServer": {
         "port": 6789
     },
     "WebAppServer": {

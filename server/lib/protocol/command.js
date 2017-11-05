@@ -3,7 +3,6 @@ const
     playersRepository   = require("./../repositories/players-repository.js");
     matchesRepository   = require("./../repositories/match-repository.js");
 
-
 const Command = function () {};
 
 // Register a new player
