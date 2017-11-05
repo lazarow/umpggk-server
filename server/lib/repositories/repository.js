@@ -9,12 +9,8 @@ class Repository {
         this.setIo(io);
         this.setDb(db);
         
-        this.emitChange = function (table,action,data) {
-            injector.get('io').emit('data', {
-                table,
-                action,
-                data
-            });
+        this.emitChange = function (emitDataObj) {
+            injector.get('io').emit('data', emitDataObj);
         };
         repositories.push(this);
     }

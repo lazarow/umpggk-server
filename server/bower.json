@@ -5,6 +5,7 @@
     "vue": "latest",
     "vue-router": "latest",
     "requirejs": "latest",
-    "bootstrap": "4.0.0-alpha.6"
+    "bootstrap": "4.0.0-alpha.6",
+    "lodash": "^4.17.4"
   }
 }

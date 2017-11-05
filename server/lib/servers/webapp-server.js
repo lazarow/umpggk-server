@@ -4,6 +4,7 @@ const
     SocketIoServer  = require('socket.io'),
     container       = require('./../container/container.js');
     repositories    = require('./../repositories/repositories');
+    injector        = require("./../container/injector.js")
 
 const WebAppServer = function () {};
 
@@ -17,6 +18,12 @@ WebAppServer.prototype.start = function (options) {
 
     container.value('io', io);
     io.on('connection', function (socket) {
+
+        /*TODO  send latest database*/
+
+
+        socket.emit('database',injector.get("db").value());
+
         console.log('A new websocket connection...');
         socket.on('disconnect', function () {
             console.log('The websocket disconnection...');
@@ -27,3 +34,5 @@ WebAppServer.prototype.start = function (options) {
 };
 
 module.exports = new WebAppServer();
+
+
