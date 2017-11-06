@@ -1,10 +1,11 @@
 const
     config              = require("config"),
-    low                 = require('lowdb'),
-    container           = require('./../container/container.js'),
-    injector            = require('./../container/injector.js'),
-    Adapter             = require('./adapter.js'),
-    repositories        = require("./../repositories/repositories.js");
+    low                 = require("lowdb"),
+    container           = require("./../container/container.js"),
+    injector            = require("./../container/injector.js"),
+    Adapter             = require("./adapter.js"),
+    repositories        = require("./../repositories/repositories.js"),
+	log					= require("./../log.js")(__filename);
 
 const DatabaseService = function () {};
 
@@ -13,8 +14,11 @@ DatabaseService.prototype.createConnector = function () {
     const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
         + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
         + currentDate.getMilliseconds() + ".json";
-    const db = low(new Adapter('./../saves/' + filename));
+    const db = low(new Adapter("./../saves/" + filename));
+	log.debug("The database connection has been created");
+    /* Add the database connection (connector) to the DI conatiner */
     container.value("db", db);
+    /* Assign the database connection to all already existed repositories (a repository could already exist) */
     repositories.forEach((repository) => {
         repository.setDb(db);
     });

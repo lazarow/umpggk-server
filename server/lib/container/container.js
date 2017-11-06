@@ -1,4 +1,6 @@
-const di = require('node-di-container');
+const
+	di	= require("node-di-container"),
+	log	= require("./../log.js")(__filename);
 
 module.exports = di.container();
-console.log('The DI containter has been created');
+log.debug("The DI containter has been created");

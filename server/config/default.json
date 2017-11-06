@@ -12,5 +12,9 @@
         "rounds": [],
         "matches": [],
         "games": []
-    }
+    },
+	"Log": {
+		"isLogEnabled": true,
+		"isDebugEnabled": true
+	}
 }

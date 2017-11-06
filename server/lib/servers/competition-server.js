@@ -1,10 +1,11 @@
 const
     net                 = require("net"),
     config              = require("config"),
-    shortid             = require('shortid'),
+    shortid             = require("shortid"),
     injector            = require("./../container/injector.js"),
     sockets             = require("./sockets.js"),
-    playersRepository   = require("./../repositories/players-repository.js");
+    playersRepository   = require("./../repositories/players-repository.js"),
+	log 				= require("./../log.js")(__filename);
 
 const CompetitionServer = function () {};
 
@@ -50,7 +51,7 @@ CompetitionServer.prototype.start = function (options) {
             console.log("The connection is lost from the initiator " + initiator);
         });
     });
-    console.log("The competition server is listening on " + this.server.address().address + ":"
+    log.info("The competition server is listening on " + this.server.address().address + ":"
         + this.server.address().port);
 };
 
