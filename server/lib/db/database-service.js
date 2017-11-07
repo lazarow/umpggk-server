@@ -12,22 +12,44 @@ const DatabaseService = function () {};
 
 DatabaseService.prototype.createConnector = function () {
     const currentDate = new Date();
-    const filename = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
-        + "-" + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds() + "-"
-        + currentDate.getMilliseconds() + ".json";
+    const filename = 
+        currentDate.getFullYear()
+        + "-" + String("00" + (currentDate.getMonth() + 1)).slice(-2)
+        + "-" + String("00" + currentDate.getDate()).slice(-2)
+        + "-" + String("00" + currentDate.getHours()).slice(-2)
+        + String("00" + currentDate.getMinutes()).slice(-2) + String("00" + currentDate.getSeconds()).slice(-2)
+        + "-" + String("000" + currentDate.getMilliseconds()).slice(-3) + ".json";
     const adapter = new Adapter("./../saves/" + filename); 
     const db = low(adapter);
     /* The namespace denotes the scope for socket.io emitting */
     db.namespace = null;
     /* The write function wrapper for emmiting all saves */
-    db.write = function (returnValue) {
-        let result = adapter.write(db.getState());
-        injector.get('io').emit(this.namespace, returnValue);
-        log.debug("Emmiting data for the namespace `" + this.namespace + "`", returnValue);
-        return isPromise(result) ? result.then(function () {
-            return returnValue;
-        }) : returnValue;
-    };
+    db._.prototype.write = db._.wrap(db._.prototype.value, function (func) {
+        let
+            current     = db.get(db.namespace).value(),
+            keys        = current != undefined ? Object.keys(current) : [],
+            result      = func.apply(this),
+            message     = {action: null, data: null}
+        if (Array.isArray(result)) {
+            let inserted = db._.difference(Object.keys(result), keys);
+            if (inserted.length > 0) {
+                message.action = "insert";
+                message.data = result[inserted[0]];
+            } else {
+                let deleted = db._.difference(keys, Object.keys(result));
+                if (deleted.length > 0) {
+                    message.action = "delete";
+                    message.data = deleted;
+                }
+            }
+        } else {
+            message.action = "update";
+            message.data = result;
+        }
+        injector.get('io').emit(db.namespace, message);
+        log.debug("Emmiting data for the namespace `" + db.namespace + "`", message);
+        return db.write(result);
+    });
 	log.debug("The database connection has been created");
     /* Add the database connection (connector) to the DI conatiner */
     container.value("db", db);
@@ -38,7 +60,7 @@ DatabaseService.prototype.createConnector = function () {
 };
 
 DatabaseService.prototype.createEmptyDatabase = function () {
-    injector.get("db").namespace = "no-repository";
+    injector.get("db").namespace = "";
     injector.get("db").defaults(config.get("EmptyDatabase")).write();
 };
 

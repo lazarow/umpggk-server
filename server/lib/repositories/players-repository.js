@@ -1,6 +1,6 @@
-const Repository = require("./repository.js");
-        injector = require("./../container/injector.js");
-
+const
+    Repository  = require("./repository.js");
+    injector    = require("./../container/injector.js");
 
 class PlayersRepository extends Repository
 {

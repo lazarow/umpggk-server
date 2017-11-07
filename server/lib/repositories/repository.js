@@ -4,10 +4,18 @@ const
     db = injector.get("db"),
     io = injector.get('io');
 
+function *createGenerator() {
+    let id = 0;
+    while (true) {
+        yield id++;
+    }
+}
+
 class Repository {
     constructor() {
         this.setIo(io);
         this.setDb(db);
+        this.idGenerator = createGenerator();
         repositories.push(this);
     }
     namespace() {

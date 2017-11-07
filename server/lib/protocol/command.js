@@ -19,6 +19,7 @@ Command.prototype['100'] = function (socketId, name) {
         log.info("The player " + name + " (" + socketId + ") has been reconnected");
     } else {
         playersRepository.register(name, socketId);
+        playersRepository.reconnect(name, socketId);
         log.info("A new player " + name + " (" + socketId + ") has been registered");
     }
     return true;
