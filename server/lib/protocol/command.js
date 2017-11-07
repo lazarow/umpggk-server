@@ -1,20 +1,25 @@
 const
     injector            = require('./../container/injector.js'),
-    playersRepository   = require("./../repositories/players-repository.js");
-    matchesRepository   = require("./../repositories/match-repository.js");
-    gameRepository   = require("./../repositories/game-repository.js");
-    roundRepository   = require("./../repositories/round-repository");
+    playersRepository   = require("./../repositories/players-repository.js"),
+    matchesRepository   = require("./../repositories/match-repository.js"),
+    gameRepository      = require("./../repositories/game-repository.js"),
+    roundRepository     = require("./../repositories/round-repository"),
+    log                 = require("./../log.js")(__filename);
 
 const Command = function () {};
+
+Command.prototype.execute = function (code) {
+    return this[code] && this[code].apply(this, [].slice.call(arguments, 1));
+};
 
 // Register a new player
 Command.prototype['100'] = function (socketId, name) {
     if (playersRepository.isRegistered(name)) {
         playersRepository.reconnect(name, socketId);
-        console.log("A new player " + name + " (" + socketId + ") has been reconnected");
+        log.info("The player " + name + " (" + socketId + ") has been reconnected");
     } else {
         playersRepository.register(name, socketId);
-        console.log("A new player " + name + " (" + socketId + ") has been registered");
+        log.info("A new player " + name + " (" + socketId + ") has been registered");
     }
     return true;
 };
@@ -79,10 +84,6 @@ Command.prototype['300'] = function(socketId){
     roundRepository.start();
     return true;
 
-};
-
-Command.prototype.execute = function (code) {
-    return this[code] && this[code].apply(this, [].slice.call(arguments, 1));
 };
 
 module.exports = new Command();

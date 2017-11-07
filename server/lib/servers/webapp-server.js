@@ -15,19 +15,12 @@ WebAppServer.prototype.start = function (options) {
     });
     this.httpServer.listen(options.port);
     const io = new SocketIoServer(this.httpServer.server);
-
-
     container.value('io', io);
     io.on('connection', function (socket) {
-
-        /*TODO  send latest database*/
-
-
-        socket.emit('database',injector.get("db").value());
-
-        console.log('A new websocket connection...');
-        socket.on('disconnect', function () {
-            console.log('The websocket disconnection...');
+        log.debug("A new websocket connection...");
+        socket.emit("database", injector.get("db").value());
+        socket.on("disconnect", function () {
+            log.debug("The websocket disconnection...");
         });
     });
     log.info("The web app server is listening on " + this.httpServer.server.address().address + ":"

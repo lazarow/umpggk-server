@@ -20,7 +20,7 @@ CompetitionServer.prototype.start = function (options) {
         socket.id = shortid.generate();
         const initiator = socket.id + "@" + socket.remoteAddress + ":" + socket.remotePort;
         sockets[socket.id] = socket;
-        console.log("The new connection has been established by the initiator " + initiator);
+        log.info("The new connection has been established by the initiator " + initiator);
         /*
             Handles received data.
         */
@@ -29,18 +29,11 @@ CompetitionServer.prototype.start = function (options) {
                 splitted = message.split(" "),
                 code = splitted[0],
                 options = splitted.slice(1);
-            console.log("The message from the " + initiator + ": " + message);
+            log.info("The message from the " + initiator + ": " + message);
             if (injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options)) !== true) {
-                socket.write("999 The transmitted command is unknown");
-                console.log("The transmitted by " + initiator  + " command " + code + " is unknown");
+                socket.write("999 The transmitted command is unknown or incorrect");
+                log.warning(initiator + " has transmitted the following command " + code + " that is unknown or incorrect");
             }
-
-
-             /*setInterval(function () {
-             let currentDate = new Date();
-             let filename = currentDate.getMilliseconds();
-             injector.get('Command').execute.apply(injector.get('Command'), [100, shortid.generate(), filename])
-             },1000)*/
         });
         /*
             Handles the connection lost.
@@ -48,7 +41,7 @@ CompetitionServer.prototype.start = function (options) {
         socket.on("close", function() {
             playersRepository.disconnect(this.id);
             delete sockets[this.id];
-            console.log("The connection is lost from the initiator " + initiator);
+            log.warning("The connection is lost from the initiator " + initiator);
         });
     });
     log.info("The competition server is listening on " + this.server.address().address + ":"

@@ -2,8 +2,11 @@ const Repository = require("./repository.js");
         injector = require("./../container/injector.js");
 
 
-class PlayerRepository extends Repository {
-
+class PlayersRepository extends Repository
+{
+    namespace() {
+        return "players";
+    }
 
     /*return player latest id or undefined*/
     latestGame(playerName){
@@ -18,10 +21,10 @@ class PlayerRepository extends Repository {
     }
 
     isRegistered(name) {
-        return this.db.get('players').find({name: name}).value() !== undefined;
+        return this.db().get('players').find({name: name}).value() !== undefined;
     }
     register(name, socketId) {
-        let playerObj = {
+        return this.db().get("players").push({
             name: name,
             socketId: socketId,
             connected: false,
@@ -34,33 +37,22 @@ class PlayerRepository extends Repository {
             games: [],
             matches: [],
             opponents: []
-        };
-
-        this.db.get("players").push(playerObj).write();
-
-        this.emitChange({
-            table: "players",
-            action: "push",
-            data: playerObj
-        });
+        }).write();
     }
-
     reconnect(name, socketId) {
-        return this.db.get('players').find({name: name}).assign({
+        return this.db().get('players').find({name: name}).assign({
             socketId: socketId,
             connected: true,
             connectedAt: (new Date()).getTime(),
         }).write();
     }
-
     disconnect(socketId) {
-        return this.db.get('players').find({socketId: socketId}).assign({
+        return this.db().get('players').find({socketId: socketId}).assign({
             socketId: null,
             connected: false,
             connectedAt: null,
         }).write();
     }
-
 }
 
-module.exports = new PlayerRepository();
+module.exports = new PlayersRepository();

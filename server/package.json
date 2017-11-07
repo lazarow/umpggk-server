@@ -4,9 +4,10 @@
     "color-logs": "^0.6.1",
     "config": "latest",
     "http-server": "latest",
+    "is-promise": "^2.1.0",
     "lowdb": "latest",
     "node-di-container": "latest",
     "shortid": "latest",
-    "socket.io": "2.0.3"
+    "socket.io": "2.0.3",
   }
 }

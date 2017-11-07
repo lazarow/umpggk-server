@@ -8,19 +8,20 @@ class Repository {
     constructor() {
         this.setIo(io);
         this.setDb(db);
-        
-        this.emitChange = function (emitDataObj) {
-            injector.get('io').emit('data', emitDataObj);
-        };
         repositories.push(this);
     }
-
-    setIo(io){
-        this.io = io;
+    namespace() {
+        return "repository";
     }
-
+    db(namespace) {
+        this._db.namespace = namespace || this.namespace();
+        return this._db;
+    }
+    setIo(io){
+        this._io = io;
+    }
     setDb(db) {
-        this.db = db;
+        this._db = db;
     }
 }
 
