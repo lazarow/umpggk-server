@@ -20,7 +20,6 @@ var game = {
     black: null,        // Identyfikator drugiego gracza int
     winner: null,       // Identyfikator zwyciescy int
     loser: null,        // Identyfikator przegranego int
-    isFinished: false,  // Czy gra jest zakończona? true|false
     startedAt: null,    // Czas rozpoczecia gry unixtimestamp
     finishedAt: null,   // Czas skończenia gry unixtimestamp
     duration: null,     // Sumaryczny czas gry
@@ -32,7 +31,6 @@ var match = {
     blue: null,         // Identyfikator drugiego gracza, z innym kluczem, żeby odróżnić od gry int
     redPoints: 0,       // Punkty gracza czerwonego int
     bluePoints: 0,      // Punkty gracza niebieskiego int
-    isFinished: false,  // Czy mecz jest zakończony? true|false
     startedAt: null,    // Czas rozpoczecia meczu unixtimestamp
     finishedAt: null,   // Czas skończenia meczu unixtimestamp
     duration: null,     // Sumaryczny czas meczu
@@ -41,7 +39,7 @@ var match = {
 var round = {
     startedAt: null,    // Czas rozpoczecia rundy unixtimestamp
     finishedAt: null,   // Czas skończenia rundy unixtimestamp
-    duration: null,     // Sumaryczny rundy meczu
+    duration: null,     // Sumaryczny rundy rundy
     matches: []         // Lista meczy w rundzie int[]
 };
 var tournament = {

@@ -1,5 +1,5 @@
 const
-    Repository  = require("./repository.js");
+    Repository  = require("./repository.js"),
     injector    = require("./../container/injector.js");
 
 class PlayersRepository extends Repository
@@ -7,24 +7,8 @@ class PlayersRepository extends Repository
     namespace() {
         return "players";
     }
-
-    /*return player latest id or undefined*/
-    latestGame(playerName){
-
-        return this.db.get("games").filter(game => game.white === playerName || game.black === playerName).last().value();
-
-
-    }
-
-    getName(socketId){
-        return this.db.get("players").find({socketId: socketId}).get("name").value();
-    }
-
-    isRegistered(name) {
-        return this.db().get('players').find({name: name}).value() !== undefined;
-    }
     register(name, socketId) {
-        return this.db().get("players").push({
+        const player = this.db().get("players").push({
             name: name,
             socketId: socketId,
             connected: false,
@@ -38,21 +22,47 @@ class PlayersRepository extends Repository
             matches: [],
             opponents: []
         }).write();
+		this.reconnect(name, socketId);
+		return player;
     }
     reconnect(name, socketId) {
-        return this.db().get('players').find({name: name}).assign({
-            socketId: socketId,
-            connected: true,
-            connectedAt: (new Date()).getTime(),
+        return this.db().get("players").find({name: name}).assign({
+	        socketId: socketId,
+	        connected: true,
+	        connectedAt: (new Date()).getTime(),
         }).write();
     }
     disconnect(socketId) {
-        return this.db().get('players').find({socketId: socketId}).assign({
-            socketId: null,
-            connected: false,
-            connectedAt: null,
+        return this.db().get("players").find({socketId: socketId}).assign({
+	        socketId: null,
+	        connected: false,
+	        connectedAt: null,
         }).write();
     }
+	isRegistered(name) {
+        return this.db().get("players").find({name: name}).value() !== undefined;
+    }
+	addMatch(name, matchId) {
+		const player = this.db().get("players").find({name: name});
+		const matches = player.value().matches;
+		matches.push(matchId);
+		return player.assign({matches: matches}).write();
+	}
+	addGame(name, gameId) {
+		const player = this.db().get("players").find({name: name});
+		const games = player.value().games;
+		games.push(gameId);
+		return player.assign({games: games}).write();
+	}
+	addOpponent(name, opponentId) {
+		const player = this.db().get("players").find({name: name});
+		const opponents = player.value().opponents;
+		opponents.push(opponentId);
+		return player.assign({opponents: opponents}).write();
+	}
+	getSocketId(name) {
+		return this.db().get("players").find({name: name}).value().socketId;
+	}
 }
 
 module.exports = new PlayersRepository();

@@ -1,48 +1,45 @@
 const
-    Repository = require("./repository.js");
-        injector = require("./../container/injector.js");
-        matchRepository = require("./match-repository");
+    Repository		= require("./repository.js"),
+    injector		= require("./../container/injector.js"),
+    roundRepository	= require("./round-repository");
 
-
-class RoundRepository extends Repository {
-
-    generateId(){
-        return this.db.get("rounds").size();
+class TournamentRepository extends Repository
+{
+	/**
+	 * Creates a new tournament. The options contains tournament settings.
+	 */
+	createTournament(options) {
+		return this.db().get("tournament").assign({
+			type: options.type,
+		    additionalRounds: options.additionalRounds,
+		    timeLimit: options.timeLimit,
+		    numberOfGamesInSingleMatch: options.numberOfGamesInSingleMatch,
+		    rounds: []
+        }).write();
+	}
+	addRound(roundId) {
+		const
+			tournament = this.db.get("tournament"),
+			rounds = tournament.value().rounds;
+		rounds.push(roundId);
+        return tournament.assign({rounds: rounds}).write();
     }
-
-    addRoundToTournament(roundId){
-        this.db.get("tournament").get("rounds").push(roundId).write();
-    }
-
-    start() {
-        let roundId = this.generateId();
-        this.addRoundToTournament(roundId);
-
-
-
-        let roundObject = {
-            roundId:roundId,
-            startedAt: (new Date()).getTime(),
-            finishedAt: null,
-            duration: null,
-            matches: []
-        };
-
-        this.db.get("rounds").push(roundObject).write();
-        this.emitChange({
-            table: "rounds",
-            action: "push",
-            data: roundObject
-        });
-
-        this.db.get("players").map(player => player.name).chunk(2).map(function(pairArray){
-            if(pairArray.length === 2){
-                matchRepository.start(pairArray[0],pairArray[1],roundId);
-            }
-        }).value();
-
-    }
-
+	hasUnfinishedRounds() {
+		for (roundId in this.db().get("tournament").value().rounds) {
+			if (roundRepository.isUnfinished(roundId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	startNextUnfinishedRound() {
+		for (roundId in this.db().get("tournament").value().rounds) {
+			if (roundRepository.isUnfinished(roundId)) {
+				roundRepository.start(roundId);
+				break;
+			}
+		}
+	}
 }
 
 module.exports = new RoundRepository();

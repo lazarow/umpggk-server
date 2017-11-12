@@ -1,132 +1,64 @@
-const Repository = require("./repository.js");
-injector = require("./../container/injector.js");
+const
+	Repository	= require("./repository.js"),
+	injector	= require("./../container/injector.js");
 
-
-class GameRepository extends Repository {
-
-
-    /*generateId(){
-        return this.db.get("games").size();
-    }*/
-
-    *generateId(){
-        let id = 0;
-        while(true)
-            yield id++
+class GameRepository extends Repository
+{
+	namespace() {
+        return "games";
     }
-
-    addGameToPlayer(playerName,gameId){
-        this.db.get("players").find({name: playerName}).get("games").push(gameId).write();
-        this.emitChange({
-            table: "players",
-            filter: "name",
-            value: playerName,
-            action: "push",
-            get: "games",
-            data: gameId
-        });
-    }
-
-    addGameToMatch(matchId,gameId){
-        this.db.get("matches").find({matchId:matchId}).get("games").push(gameId).write();
-        this.emitChange({
-            table: "matches",
-            filter: "matchId",
-            value: matchId,
-            action: "push",
-            get: "games",
-            data: gameId
-        })
-    }
-
-    start(whiteName, blackName, matchId){
-
-        let gameId = this.generateId().next().value;
-        /*let gameId = (Math.random()*100).toFixed(0);*/
-
-        let gameObject = {
-            gameId: gameId,
-            white: whiteName,
-            black: blackName,
-            winner: null,
-            loser: null,
-            isFinished: false,
-            startedAt: Date.now(),
-            finishedAt: null,
-            duration: null,
-            state: "started",
-            moves: []
-        };
-
-        this.db.get("games").push(gameObject).write();
-        this.emitChange({
-            table: "games",
-            action: "push",
-            data: gameObject
-        });
-
-        /*add game to match games array*/
-        this.addGameToMatch(matchId,gameId);
-
-        /*add game to games players array*/
-        this.addGameToPlayer(blackName,gameId);
-        this.addGameToPlayer(whiteName,gameId);
-
-        return Math.random() > 0.5
-    };
-
-    winningMove(){
-        /*logic for winning move TODO*/
-        return Math.random() > 0.2;
-    }
-
-    move(playerName,move){
-
-        /*find last game from player by socketId
-        * consider moving method to player-repo ?
-        * */
-
-        let gameId = this.db.get("players").find({name: playerName}).get("games").last().value();
-
-
-
-        /*check if game is ongoing TODO*/
-        this.db.get("games").find({gameId:gameId}).get("moves").push(move);
-
-        this.emitChange({
-            table: "games",
-            filter: "gameId",
-            value: gameId,
-            get: "moves",
-            action: "push",
-            data: move
-
-        });
-
-        if(this.winningMove()){
-            let gameChange = {
-                winner: playerName,
-                finishedAt: Date.now(),
-                state: "finished",
-                isFinished: true,
-            };
-
-            this.db.get("games").find({gameId:gameId}).assign(gameChange).write();
-            this.emitChange({
-                table: "games",
-                filter: "gameId",
-                value: gameId,
-                action: "assign",
-                data: gameChange,
-            })
-
-
-        }
-
-
-
-    }
-
+	create(whiteId, blackId) {
+		return this.db().get("games").push({
+			id: this.idGenerator.next().value,
+			white: whiteId,
+		    black: blackId,
+		    winner: null,
+		    loser: null,
+		    startedAt: null,
+		    finishedAt: null,
+		    duration: null,
+		    state: null,
+		    moves: []
+        }).write();
+	}
+	start(gameId) {
+		const game = this.db().get("games").find({id: gameId});
+		// todo: checking if players are connected, if not then resolvce a game immediately
+		// todo: send messages to the players that the game is started
+		return game.assign({startedAt: new Date()).getTime()}).write();
+	}
+	finish(gameId) {
+		const
+			finishedAt = new Date()).getTime(),
+			game = this.db().get("games").find({id: gameId}),
+			startedAt = game.value().startedAt;
+		return game.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();
+	}
+	isStarted(gameId) {
+		return this.db().get("games").find({id: gameId}).value().startedAt === null;
+	}
+	isUnifinished(gameId) {
+		return this.db().get("games").find({id: gameId}).value().finishedAt === null;
+	}
+	addMove(gameId, move) {
+		const
+			game = this.db().get("games").find({id: gameId}),
+			moves = game.value().matches;
+		moves.push(move);
+		return game.assign({moves: moves}).write();
+	}
+	setWinner(gameId, winner) {
+		return this.db().get("games").find({id: gameId}).assign({winner: winner}).write();
+	}
+	setLoser(gameId, loser) {
+		return this.db().get("games").find({id: gameId}).assign({loser: loser}).write();
+	}
+	setState(gameId, state) {
+		return this.db().get("games").find({id: gameId}).assign({state: state}).write();
+	}
+	getState(gameId) {
+		return this.db().get("games").find({id: gameId}).value().state;
+	}
 }
 
 module.exports = new GameRepository();

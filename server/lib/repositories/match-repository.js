@@ -1,93 +1,75 @@
-const   Repository = require("./repository.js");
-        injector = require("./../container/injector.js");
-        gameRepository   = require("./../repositories/game-repository.js");
+const
+	Repository			= require("./repository.js"),
+	injector			= require("./../container/injector.js"),
+	gameRepository		= require("./../repositories/game-repository.js"),
+	playerRepository	= require("./../repositories/player-repository.js");
 
-
-class MatchRepository extends Repository {
-
-    *generateId(){
-        let id = 0;
-        while(true)
-        yield id++
+class MatchRepository extends Repository
+{
+	namespace() {
+        return "matches";
     }
+	create(redId, blueId) {
+		const match = {
+			id: this.idGenerator.next().value,
+			red: redId,
+		    blue: blueId,
+		    redPoints: 0,
+		    bluePoints: 0,
+		    startedAt: null,
+		    finishedAt: null,
+	    	duration: null,
+    		games: []
+		};
+		playerRepository.addMatch(redId, match.id);
+		playerRepository.addMatch(blueId, match.id);
+		playerRepository.addOpponent(redId, blueId);
+		playerRepository.addOpponent(blueId,redId);
+		return match;
+	}
+	start(matchId) {
+		const match = this.db().get("matches").find({id: matchId});
+		return match.assign({startedAt: new Date()).getTime()}).write();
+	}
+	finish(matchId) {
+		const
+			finishedAt = new Date()).getTime(),
+			match = this.db().get("matches").find({id: matchId}),
+			startedAt = match.value().startedAt;
+		return match.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();
+	}
+	isStarted(matchId) {
+		return this.db().get("matches").find({id: matchId}).value().startedAt === null;
+	}
+	isUnifinished(matchId) {
+		return this.db().get("matches").find({id: matchId}).value().finishedAt === null;
+	}
+	addGame(matchId, gameId) {
+		const
+			match = this.db().get("matches").find({id: matchId}),
+			games = match.value().matches;
+		games.push(gameId);
+		return match.assign({games: games}).write();
+	}
+	hasUnfinishedGames(matchId) {
+		for (gameId in this.db().get("matches").find({id: matchId}).value().games) {
+			if (gameRepository.isUnfinished(gameId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	startNextUnfinishedGame(matchId) {
+		for (gameId in this.db().get("matches").find({id: matchId}).value().games) {
+			if (gameRepository.isUnfinished(gameId)) {
+				gameRepository.start(gameId);
+				break;
+			}
+		}
+	}
+	getRedIp(matchId) {
 
-
-    addMatchToPlayer(playerName,matchId){
-          this.db.get("players").find({name: playerName}).get("matches").push(matchId).write();
-          this.emitChange({
-              table:"players",
-              filter:"name",
-              value: playerName,
-              get: "matches",
-              action: "push",
-              data: matchId
-          })
-    }
-
-    addMatchToRound(matchId,roundId){
-        this.db.get("rounds").find({roundId: roundId}).get("matches").push(matchId).write();
-        this.emitChange({
-            table:"rounds",
-            filter:"roundId",
-            value:roundId,
-            get:"matches",
-            action:"push",
-            data:matchId
-        })
-
-    }
-
-    start(bluePlayerName,redPlayerName, roundId) {
-
-        /*check if both players are "free"*/
-
-        let matchId = this.generateId().next().value;
-        //let matchId = (Math.random()*100).toFixed(0);
-
-        let matchObject = {
-            matchId: matchId,
-            red: bluePlayerName,
-            blue: redPlayerName,
-            redPoints: 0,
-            bluePoints: 0,
-            isFinished: false,
-            startedAt: (new Date()).getTime(),
-            finishedAt: null,
-            duration: null,
-            games: []
-        };
-
-        this.db.get("matches").push(matchObject).write();
-
-        this.emitChange({
-            table:"matches",
-            action: "push",
-            data: matchObject
-        });
-
-        this.addMatchToRound(matchId,roundId);
-        this.addMatchToPlayer(bluePlayerName,matchId);
-        this.addMatchToPlayer(redPlayerName,matchId);
-
-
-
-       for(let i = 0; i <= 30; i++){
-           /*TODO*/
-           if(gameRepository.start(bluePlayerName,redPlayerName,matchId)){
-               let points = this.db.get("matches").find({matchId:matchId}).get("redPoints").value();
-               this.db.get("matches").find({matchId:matchId}).assign({
-                   redPoints: points+1
-               }).write();
-           } else {
-               let points = this.db.get("matches").find({matchId:matchId}).get("bluePoints").value();
-               this.db.get("matches").find({matchId:matchId}).assign({
-                   bluePoints: points+1
-               }).write();
-           }
-       }
-
-    }
-
+	}
 }
 
 module.exports = new MatchRepository();
