@@ -2,13 +2,13 @@ const
     Repository  = require("./repository.js"),
     injector    = require("./../container/injector.js");
 
-class PlayersRepository extends Repository
+class PlayerRepository extends Repository
 {
     namespace() {
         return "players";
     }
-    register(name, socketId) {
-        const player = this.db().get("players").push({
+    register(name) {
+        return this.db().get("players").push({
             name: name,
             socketId: socketId,
             connected: false,
@@ -22,8 +22,6 @@ class PlayersRepository extends Repository
             matches: [],
             opponents: []
         }).write();
-		this.reconnect(name, socketId);
-		return player;
     }
     reconnect(name, socketId) {
         return this.db().get("players").find({name: name}).assign({
@@ -65,4 +63,4 @@ class PlayersRepository extends Repository
 	}
 }
 
-module.exports = new PlayersRepository();
+module.exports = new PlayerRepository();

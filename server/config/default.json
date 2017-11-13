@@ -1,14 +1,21 @@
 {
-    "TournamentServer": {
-        "port": 6789,
-        "timeLimit": 2000,
+	"Tournament": {
+		"game": "nogo",
+		"timeLimit": 2000,
         "type": "round-robin",
         "numberOfGamesInSingleMatch": 10,
 		"additionalRounds": null
+	},
+    "TournamentServer": {
+        "port": 6789
     },
     "WebAppServer": {
         "path": "./../webapp",
         "port": 8000
+    },
+	"AdminServer": {
+        "port": 8001,
+		"token": "replace-it"
     },
     "EmptyDatabase": {
         "tournament": {},
@@ -20,5 +27,11 @@
 	"Log": {
 		"isLogEnabled": true,
 		"isDebugEnabled": true
+	},
+	"Controls": {
+		"registrationStart": "auto",
+		"roundsStart": "auto",
+		"matchesStart": "auto",
+		"gamesStart": "auto"
 	}
 }

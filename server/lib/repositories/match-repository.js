@@ -29,11 +29,11 @@ class MatchRepository extends Repository
 	}
 	start(matchId) {
 		const match = this.db().get("matches").find({id: matchId});
-		return match.assign({startedAt: new Date()).getTime()}).write();
+		return match.assign({startedAt: (new Date()).getTime()}).write();
 	}
 	finish(matchId) {
 		const
-			finishedAt = new Date()).getTime(),
+			finishedAt = (new Date()).getTime(),
 			match = this.db().get("matches").find({id: matchId}),
 			startedAt = match.value().startedAt;
 		return match.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();

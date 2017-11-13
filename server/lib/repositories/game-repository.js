@@ -25,11 +25,11 @@ class GameRepository extends Repository
 		const game = this.db().get("games").find({id: gameId});
 		// todo: checking if players are connected, if not then resolvce a game immediately
 		// todo: send messages to the players that the game is started
-		return game.assign({startedAt: new Date()).getTime()}).write();
+		return game.assign({startedAt: (new Date()).getTime()}).write();
 	}
 	finish(gameId) {
 		const
-			finishedAt = new Date()).getTime(),
+			finishedAt = (new Date()).getTime(),
 			game = this.db().get("games").find({id: gameId}),
 			startedAt = game.value().startedAt;
 		return game.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();

@@ -4,7 +4,6 @@ const
     shortid             = require("shortid"),
     injector            = require("./../container/injector.js"),
     sockets             = require("./sockets.js"),
-    playersRepository   = require("./../repositories/players-repository.js"),
 	log 				= require("./../log.js")(__filename);
 
 const CompetitionServer = function () {};

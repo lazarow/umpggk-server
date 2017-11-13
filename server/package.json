@@ -8,6 +8,7 @@
     "lowdb": "latest",
     "node-di-container": "latest",
     "shortid": "latest",
-    "socket.io": "2.0.3"
+    "socket.io": "2.0.3",
+	"express": "latest"
   }
 }

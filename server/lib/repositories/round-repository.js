@@ -19,11 +19,11 @@ class RoundRepository extends Repository
 	}
 	start(roundId) {
 		const round = this.db().get("rounds").find({id: roundId});
-		return round.assign({startedAt: new Date()).getTime()}).write();
+		return round.assign({startedAt: (new Date()).getTime()}).write();
 	}
 	finish(roundId) {
 		const
-			finishedAt = new Date()).getTime(),
+			finishedAt = (new Date()).getTime(),
 			round = this.db().get("rounds").find({id: roundId}),
 			startedAt = round.value().startedAt;
 		return round.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();
@@ -50,6 +50,7 @@ class RoundRepository extends Repository
 		return false;
 	}
 	startNextUnfinishedMatches(roundId) {
+		// todo: filter out matches that collide with themself based on IP
 		const ips = [];
 		for (matchId in this.db().get("rounds").find({id: roundId}).value().matches) {
 			if (matchRepository.isUnfinished(matchId)) {

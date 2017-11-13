@@ -1,6 +1,6 @@
 const
     injector            = require('./../container/injector.js'),
-    playersRepository   = require("./../repositories/players-repository.js"),
+    playerRepository    = require("./../repositories/player-repository.js"),
     matchesRepository   = require("./../repositories/match-repository.js"),
     gameRepository      = require("./../repositories/game-repository.js"),
     roundRepository     = require("./../repositories/round-repository"),
@@ -14,12 +14,12 @@ Command.prototype.execute = function (code) {
 
 // Register a new player
 Command.prototype['100'] = function (socketId, name) {
-    if (playersRepository.isRegistered(name)) {
-        playersRepository.reconnect(name, socketId);
+    if (playerRepository.isRegistered(name)) {
+        playerRepository.reconnect(name, socketId);
         log.info("The player " + name + " (" + socketId + ") has been reconnected");
     } else {
-        playersRepository.register(name, socketId);
-        playersRepository.reconnect(name, socketId);
+        playerRepository.register(name);
+        playerRepository.reconnect(name, socketId);
         log.info("A new player " + name + " (" + socketId + ") has been registered");
     }
     return true;

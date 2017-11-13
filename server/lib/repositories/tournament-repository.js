@@ -5,15 +5,20 @@ const
 
 class TournamentRepository extends Repository
 {
+	namespace() {
+		return "tournament";
+	}
 	/**
 	 * Creates a new tournament. The options contains tournament settings.
 	 */
-	createTournament(options) {
+	create(options) {
 		return this.db().get("tournament").assign({
+			game: options.game,
 			type: options.type,
 		    additionalRounds: options.additionalRounds,
 		    timeLimit: options.timeLimit,
 		    numberOfGamesInSingleMatch: options.numberOfGamesInSingleMatch,
+			registration: false,
 		    rounds: []
         }).write();
 	}
@@ -40,6 +45,15 @@ class TournamentRepository extends Repository
 			}
 		}
 	}
+	isRegistrationOpen() {
+		return this.db().get("tournament").value().registration;
+	}
+	openRegistration() {
+		return this.db().get("tournament").assign({registration: true}).write();
+	}
+	closeRegistration() {
+		return this.db().get("tournament").assign({registration: false}).write();
+	}
 }
 
-module.exports = new RoundRepository();
+module.exports = new TournamentRepository();

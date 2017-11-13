@@ -1,9 +1,7 @@
 const
-    config          = require("config"),
     HttpServer      = require("http-server").HttpServer,
     SocketIoServer  = require('socket.io'),
     container       = require('./../container/container.js'),
-    repositories    = require('./../repositories/repositories'),
     injector        = require("./../container/injector.js"),
 	log 			= require("./../log.js")(__filename);
 
