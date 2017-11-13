@@ -1,7 +1,9 @@
 const
-    injector            = require('./../container/injector.js'),
-    playerRepository    = require("./../repositories/player-repository.js"),
-    log                 = require("./../log.js")(__filename);
+    injector            	= require('./../container/injector.js'),
+	tournamentRepository	= require("./../repositories/tournament-repository.js"),
+    playerRepository    	= require("./../repositories/player-repository.js"),
+	socketsService			= require("./../servers/sockets-service.js"),
+    log                 	= require("./../log.js")(__filename);
 
 const Command = function () {};
 
@@ -15,9 +17,17 @@ Command.prototype['100'] = function (socketId, name) {
         playerRepository.reconnect(name, socketId);
         log.info("The player " + name + " (" + socketId + ") has been reconnected");
     } else {
-        playerRepository.register(name);
-        playerRepository.reconnect(name, socketId);
-        log.info("A new player " + name + " (" + socketId + ") has been registered");
+		if (tournamentRepository.isRegistrationOpen()) {
+			if (/\s/g.test(name)) {
+				socketsService.send(socketId, "999 The player's name cannot contain whitespaces");
+			} else {
+        		playerRepository.register(name);
+        		playerRepository.reconnect(name, socketId);
+        		log.info("A new player " + name + " (" + socketId + ") has been registered");
+			}
+		} else {
+			socketsService.send(socketId, "999 The registration is closed");
+		}
     }
     return true;
 };

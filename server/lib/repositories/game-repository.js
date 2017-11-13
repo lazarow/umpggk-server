@@ -1,6 +1,7 @@
 const
-	Repository	= require("./repository.js"),
-	injector	= require("./../container/injector.js");
+	Repository			= require("./repository.js"),
+	injector			= require("./../container/injector.js"),
+	playerRepository	= require("./player-repository.js");
 
 class GameRepository extends Repository
 {
@@ -8,7 +9,7 @@ class GameRepository extends Repository
         return "games";
     }
 	create(whiteId, blackId) {
-		return this.db().get("games").push({
+		const game = this.db().get("games").push({
 			id: this.idGenerator.next().value,
 			white: whiteId,
 		    black: blackId,
@@ -20,19 +21,22 @@ class GameRepository extends Repository
 		    state: null,
 		    moves: []
         }).write();
+		playerRepository.addGame(whiteId, gameId);
+		playerRepository.addGame(blackId, gameId);
+		return game;
 	}
 	start(gameId) {
 		const game = this.db().get("games").find({id: gameId});
 		// todo: checking if players are connected, if not then resolvce a game immediately
 		// todo: send messages to the players that the game is started
-		return game.assign({startedAt: (new Date()).getTime()}).write();
+		return game.assign(this._.assign(game.value(), {startedAt: (new Date()).getTime()})).write();
 	}
 	finish(gameId) {
 		const
 			finishedAt = (new Date()).getTime(),
 			game = this.db().get("games").find({id: gameId}),
 			startedAt = game.value().startedAt;
-		return game.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();
+		return game.assign(this._.assign(game.value(), {finishedAt: finishedAt, duration: finishedAt - startedAt})).write();
 	}
 	isStarted(gameId) {
 		return this.db().get("games").find({id: gameId}).value().startedAt === null;
@@ -45,16 +49,19 @@ class GameRepository extends Repository
 			game = this.db().get("games").find({id: gameId}),
 			moves = game.value().matches;
 		moves.push(move);
-		return game.assign({moves: moves}).write();
+		return game.assign(this._.assign(game.value(), {moves: moves})).write();
 	}
 	setWinner(gameId, winner) {
-		return this.db().get("games").find({id: gameId}).assign({winner: winner}).write();
+		const game = this.db().get("games").find({id: gameId});
+		return game.assign(this._.assign(game.value(), {winner: winner})).write();
 	}
 	setLoser(gameId, loser) {
-		return this.db().get("games").find({id: gameId}).assign({loser: loser}).write();
+		const game = this.db().get("games").find({id: gameId});
+		return game.assign(this._.assign(game.value(), {loser: loser})).write();
 	}
 	setState(gameId, state) {
-		return this.db().get("games").find({id: gameId}).assign({state: state}).write();
+		const game = this.db().get("games").find({id: gameId});
+		return game.assign(this._.assign(game.value(), {state: state})).write();
 	}
 	getState(gameId) {
 		return this.db().get("games").find({id: gameId}).value().state;

@@ -30,6 +30,9 @@ class Repository {
     }
     setDb(db) {
         this._db = db;
+		if (db !== undefined) {
+			this._ = db._;
+		}
     }
 }
 

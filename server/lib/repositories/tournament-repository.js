@@ -24,10 +24,10 @@ class TournamentRepository extends Repository
 	}
 	addRound(roundId) {
 		const
-			tournament = this.db.get("tournament"),
+			tournament = this.db().get("tournament"),
 			rounds = tournament.value().rounds;
 		rounds.push(roundId);
-        return tournament.assign({rounds: rounds}).write();
+        return tournament.assign(this._.assign(tournament.value(), {rounds: rounds})).write();
     }
 	hasUnfinishedRounds() {
 		for (roundId in this.db().get("tournament").value().rounds) {
@@ -49,10 +49,12 @@ class TournamentRepository extends Repository
 		return this.db().get("tournament").value().registration;
 	}
 	openRegistration() {
-		return this.db().get("tournament").assign({registration: true}).write();
+		const tournament = this.db().get("tournament");
+		return tournament.assign(this._.assign(tournament.value(), {registration: true})).write();
 	}
 	closeRegistration() {
-		return this.db().get("tournament").assign({registration: false}).write();
+		const tournament = this.db().get("tournament");
+		return tournament.assign(this._.assign(tournament.value(), {registration: false})).write();
 	}
 }
 

@@ -24,18 +24,20 @@ class PlayerRepository extends Repository
         }).write();
     }
     reconnect(name, socketId) {
-        return this.db().get("players").find({name: name}).assign({
+		const player = this.db().get("players").find({name: name});
+        return player.assign(this._.assign(player.value(), {
 	        socketId: socketId,
 	        connected: true,
-	        connectedAt: (new Date()).getTime(),
-        }).write();
+	        connectedAt: (new Date()).getTime()
+        })).write();
     }
     disconnect(socketId) {
-        return this.db().get("players").find({socketId: socketId}).assign({
-	        socketId: null,
+		const player = this.db().get("players").find({name: name});
+        return player.assign(this._.assign(player.value(), {
+			socketId: null,
 	        connected: false,
-	        connectedAt: null,
-        }).write();
+	        connectedAt: null
+        })).write();
     }
 	isRegistered(name) {
         return this.db().get("players").find({name: name}).value() !== undefined;
@@ -44,19 +46,19 @@ class PlayerRepository extends Repository
 		const player = this.db().get("players").find({name: name});
 		const matches = player.value().matches;
 		matches.push(matchId);
-		return player.assign({matches: matches}).write();
+		return player.assign(this._.assign(player.value(), {matches: matches})).write();
 	}
 	addGame(name, gameId) {
 		const player = this.db().get("players").find({name: name});
 		const games = player.value().games;
 		games.push(gameId);
-		return player.assign({games: games}).write();
+		return player.assign(this._.assign(player.value(), {games: games})).write();
 	}
 	addOpponent(name, opponentId) {
 		const player = this.db().get("players").find({name: name});
 		const opponents = player.value().opponents;
 		opponents.push(opponentId);
-		return player.assign({opponents: opponents}).write();
+		return player.assign(this._.assign(player.value(), {opponents: opponents})).write();
 	}
 	getSocketId(name) {
 		return this.db().get("players").find({name: name}).value().socketId;

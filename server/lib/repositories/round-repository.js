@@ -19,21 +19,21 @@ class RoundRepository extends Repository
 	}
 	start(roundId) {
 		const round = this.db().get("rounds").find({id: roundId});
-		return round.assign({startedAt: (new Date()).getTime()}).write();
+		return round.assign(this._.assign(round.value(), {startedAt: (new Date()).getTime()})).write();
 	}
 	finish(roundId) {
 		const
 			finishedAt = (new Date()).getTime(),
 			round = this.db().get("rounds").find({id: roundId}),
 			startedAt = round.value().startedAt;
-		return round.assign({finishedAt: finishedAt, duration: finishedAt - startedAt}).write();
+		return round.assign(this._.assign(round.value(), {finishedAt: finishedAt, duration: finishedAt - startedAt})).write();
 	}
 	addMatch(roundId, matchId) {
 		const
 			round = this.db().get("rounds").find({id: roundId}),
 			matches = round.value().matches;
 		matches.push(matchId);
-		return round.assign({matches: matches}).write();
+		return round.assign(this._.assign(round.value(), {matches: matches})).write();
 	}
 	isStarted(roundId) {
 		return this.db().get("rounds").find({id: roundId}).value().startedAt === null;
