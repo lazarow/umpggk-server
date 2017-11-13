@@ -21,8 +21,8 @@ if (typeof args[0] !== "undefined") {
 	databaseService.createConnector(args[0]);
 	databaseService.reloadCurrentDatabase();
 } else {
-	const filepath = databaseService.createFilepath();
-	databaseService.createConnector(filepath);
+	databaseService.createConnector(databaseService.createFilepath());
 	databaseService.createEmptyDatabase();
+	// Creates a new tournament based on the configuration
 	tournamentRepository.create(config.get("Tournament"));
 }

@@ -4,6 +4,7 @@ const
     shortid             = require("shortid"),
     injector            = require("./../container/injector.js"),
     sockets             = require("./sockets.js"),
+	playerRepository	= require("./../repositories/player-repository.js"),
 	log 				= require("./../log.js")(__filename);
 
 const CompetitionServer = function () {};
@@ -38,10 +39,15 @@ CompetitionServer.prototype.start = function (options) {
             Handles the connection lost.
         */
         socket.on("close", function() {
-            playersRepository.disconnect(this.id);
+            playerRepository.disconnect(this.id);
             delete sockets[this.id];
             log.warning("The connection is lost from the initiator " + initiator);
         });
+		socket.on("error", function() {
+		    playerRepository.disconnect(this.id);
+            delete sockets[this.id];
+            log.warning("The connection is (abruptly) lost from the initiator " + initiator);
+	  	});
     });
     log.info("The competition server is listening on " + this.server.address().address + ":"
         + this.server.address().port);
