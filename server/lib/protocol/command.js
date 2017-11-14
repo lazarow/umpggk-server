@@ -8,7 +8,10 @@ const
 const Command = function () {};
 
 Command.prototype.execute = function (code) {
-    return this[code] && this[code].apply(this, [].slice.call(arguments, 1));
+    if (this[code] === undefined) {
+        return undefined;
+    }
+    return this[code].apply(this, [].slice.call(arguments, 1));
 };
 
 // Register a new player
@@ -20,6 +23,7 @@ Command.prototype['100'] = function (socketId, name) {
 		if (tournamentRepository.isRegistrationOpen()) {
 			if (/\s/g.test(name)) {
 				socketsService.send(socketId, "999 The player's name cannot contain whitespaces");
+                return false;
 			} else {
         		playerRepository.register(name);
         		playerRepository.reconnect(name, socketId);
@@ -27,6 +31,7 @@ Command.prototype['100'] = function (socketId, name) {
 			}
 		} else {
 			socketsService.send(socketId, "999 The registration is closed");
+            return false;
 		}
     }
     return true;

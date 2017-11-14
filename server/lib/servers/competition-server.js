@@ -30,9 +30,12 @@ CompetitionServer.prototype.start = function (options) {
                 code = splitted[0],
                 options = splitted.slice(1);
             log.info("The message from the " + initiator + ": " + message);
-            if (injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options)) !== true) {
+            let result = injector.get('Command').execute.apply(injector.get('Command'), [code, this.id].concat(options));
+            if (result === undefined) {
                 socket.write("999 The transmitted command is unknown or incorrect");
-                log.warning(initiator + " has transmitted the following command " + code + " that is unknown or incorrect");
+                log.warning(initiator + " has transmitted the following command " + code + " that is unknown");
+            } else if (result) {
+                socket.write("OK");
             }
         });
         /*

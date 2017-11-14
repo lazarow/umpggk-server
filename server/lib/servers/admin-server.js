@@ -1,6 +1,7 @@
 const
-    express         = require("express"),
-	log 			= require("./../log.js")(__filename);
+    express         	= require("express"),
+    tournamenRepository	= require('./../repositories/tournament-repoitory.js'),
+	log 				= require("./../log.js")(__filename);
 
 const AdminServer = function () {};
 
@@ -13,7 +14,17 @@ AdminServer.prototype.start = function (options) {
 			res.status(403).send("The provided token is invalid or missing")
 		}
 	});
-	app.get('/', (req, res) => res.send('Hello World!'))
+	
+	app.get('/tournament/open-registration', (req, res) => {
+		tournamenRepository.openRegistration();
+		res.status(200).send("");
+	});
+
+	app.get('/tournament/close-registration', (req, res) => {
+		tournamenRepository.closeRegistration();
+		res.status(200).send("");
+	});
+
 	app.listen(options.port, () => log.info("The admin server is listening on port " + options.port));
 };
 

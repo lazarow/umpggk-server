@@ -63,6 +63,9 @@ class PlayerRepository extends Repository
 	getSocketId(name) {
 		return this.db().get("players").find({name: name}).value().socketId;
 	}
+    isOnline(name) {
+        return this.db().get("players").find({name: name}).value().connected;
+    }
 }
 
 module.exports = new PlayerRepository();
