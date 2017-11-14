@@ -269,6 +269,10 @@
           app.matches = response.matches;
           app.games = response.games;
       })
+
+      socket.on('players',function (response) {
+          console.log(response);
+      })
     </script>
   </body>
 </html>

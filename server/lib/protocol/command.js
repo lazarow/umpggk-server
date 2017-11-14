@@ -2,7 +2,7 @@ const
     injector            	= require('./../container/injector.js'),
 	tournamentRepository	= require("./../repositories/tournament-repository.js"),
     playerRepository    	= require("./../repositories/player-repository.js"),
-	socketsService			= require("./../servers/sockets-service.js"),
+	socketsService			= require("./../services/sockets-service.js"),
     log                 	= require("./../log.js")(__filename);
 
 const Command = function () {};

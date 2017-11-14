@@ -32,7 +32,7 @@ class PlayerRepository extends Repository
         })).write();
     }
     disconnect(socketId) {
-		const player = this.db().get("players").find({name: name});
+		const player = this.db().get("players").find({socketId: socketId});
         return player.assign(this._.assign(player.value(), {
 			socketId: null,
 	        connected: false,
@@ -65,6 +65,9 @@ class PlayerRepository extends Repository
 	}
     isOnline(name) {
         return this.db().get("players").find({name: name}).value().connected;
+    }
+    getNames() {
+        return Object.keys(this.db().get("players").value());
     }
 }
 
