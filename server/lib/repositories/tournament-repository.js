@@ -61,6 +61,9 @@ class TournamentRepository extends Repository
 		const tournament = this.db().get("tournament");
 		return tournament.assign(this._.assign(tournament.value(), {currentRound: roundId})).write();
 	}
+	getNumberOfGamesInSingleMatch() {
+		return this.db().get("tournament").value().numberOfGamesInSingleMatch;
+	}
 }
 
 module.exports = new TournamentRepository();

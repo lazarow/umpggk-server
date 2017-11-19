@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "color-logs": "^0.6.1",
+    "config": "^1.28.1",
+    "http-server": "^0.10.0",
+    "lowdb": "^1.0.0",
+    "node-di-container": "^0.1.7",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "tap": "^10.7.3"
+  }
+}

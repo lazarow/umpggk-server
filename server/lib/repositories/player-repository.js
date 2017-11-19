@@ -69,6 +69,10 @@ class PlayerRepository extends Repository
     getNames() {
         return Object.keys(this.db().get("players").value());
     }
+	setCurrentGame(name, gameId) {
+		const player = this.db().get("players").find({name: name});
+		return player.assign(this._.assign(player.value(), {currentGame: gameId})).write();
+	}
 }
 
 module.exports = new PlayerRepository();
