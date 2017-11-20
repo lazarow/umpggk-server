@@ -1,0 +1,28 @@
+{
+	"Tournament": {
+		"game": "nogo",
+        "type": "round-robin",
+		"timeLimit": 2000,
+        "gamesLimit": 2,
+		"additionalRounds": null
+	},
+	"WebAppServer": {
+        "path": "./../webapp",
+        "port": 8000
+    },
+	"Database": {
+		"path" : "./../saves/"
+	},
+	"Log": {
+		"isLogEnabled" : true,
+		"isDebugEnabled": false
+	},
+	"EmptyDatabase": {
+	    "tournament": {},
+	    "players": [],
+	    "rounds": [],
+	    "matches": [],
+	    "games": [],
+		"reloadedAt": null
+    }
+}

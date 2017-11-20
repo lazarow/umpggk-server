@@ -79,7 +79,23 @@ class RoundRobinService
             matches = this.precomposedRounds.shift(),
             round   = roundRepository.create(),
             roundId = round.id;
-
+		for (let pairing in matches) {
+			let
+				match	= matchRepository.create(pairing[0], pairing[1]),
+				matchId	= match.id;
+				total	= tournamentRepository.getNumberOfGamesInSingleMatch,
+				middle	= Math.floor(total / 2);
+			for (let i = 0; i < total; ++i) {
+				let game;
+				if (i <= middle) {
+					game.create(pairing[0], pairing[1]);
+				} else {
+					game.create(pairing[1], pairing[0]);
+				}
+				matchRepository.addGame(matchId, game.id);
+			}
+			roundRepository.addMatch(roundId, match.id);
+		}
         tournamentRepository.addRound(roundId);
     }
 }

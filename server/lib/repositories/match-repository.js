@@ -12,6 +12,7 @@ class MatchRepository extends Repository
 	create(redId, blueId) {
 		const match = this.db().get("matches").push({
 			id: this.idGenerator.next().value,
+			roundId: null,
 			red: redId,
 		    blue: blueId,
 		    redPoints: 0,
