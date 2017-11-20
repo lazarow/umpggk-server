@@ -19,6 +19,7 @@ class TournamentRepository extends Repository
 		    timeLimit: options.timeLimit,
 		    numberOfGamesInSingleMatch: options.numberOfGamesInSingleMatch,
 			registration: false,
+			currentRound: null,
 		    rounds: []
         }).write();
 	}
@@ -55,6 +56,10 @@ class TournamentRepository extends Repository
 	closeRegistration() {
 		const tournament = this.db().get("tournament");
 		return tournament.assign(this._.assign(tournament.value(), {registration: false})).write();
+	}
+	setCurrentRound(roundId) {
+		const tournament = this.db().get("tournament");
+		return tournament.assign(this._.assign(tournament.value(), {currentRound: roundId})).write();
 	}
 }
 

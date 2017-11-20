@@ -1,7 +1,8 @@
 const
-	Repository		= require("./repository.js"),
-    injector		= require("./../container/injector.js"),
-    matchRepository	= require("./match-repository");
+	Repository				= require("./repository.js"),
+    injector				= require("./../container/injector.js"),
+    matchRepository			= require("./match-repository"),
+    tournamentRepository	= require("./tournament-repository.js");
 
 class RoundRepository extends Repository
 {
@@ -19,6 +20,7 @@ class RoundRepository extends Repository
 	}
 	start(roundId) {
 		const round = this.db().get("rounds").find({id: roundId});
+		tournamentRepository.setCurrentRound(roundId);
 		return round.assign(this._.assign(round.value(), {startedAt: (new Date()).getTime()})).write();
 	}
 	finish(roundId) {

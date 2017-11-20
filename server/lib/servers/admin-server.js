@@ -16,17 +16,20 @@ AdminServer.prototype.start = function (options) {
 			res.status(403).send("The provided token is invalid or missing")
 		}
 	});
-	
+	// Open registration
 	app.get('/tournament/open-registration', (req, res) => {
 		tournamenRepository.openRegistration();
 		res.status(200).send("");
 	});
-
+	// Close registration
 	app.get('/tournament/close-registration', (req, res) => {
 		tournamenRepository.closeRegistration();
 		res.status(200).send("");
 	});
-
+	// Remove player
+	app.get('/players/:name/remove', (req, res) => {
+		res.status(200).send("");
+	});
 	app.listen(options.port, () => log.info("The admin server is listening on port " + options.port));
 };
 
