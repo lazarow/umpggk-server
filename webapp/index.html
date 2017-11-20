@@ -23,30 +23,39 @@
   </head>
   <body>
   <div id="webapp">
-    <h2>UMPGGK tournament</h2>
-    <div class="container-fluid">
-      <admin :players="players"></admin>
-      <div class="row">
-        <div class="col-12 col-md">
-          <!--table with scoreboard-->
+    <div class="container">
+      <h1 class="text-center">UMPGGK tournament</h1>
 
+      <!--admin panel-->
+      <admin :players="players" v-if="adminPanel === 'true'"></admin>
+
+
+      <!--leaderboard table-->
+      <div class="row row-space">
+        <div class="col-12">
+          <!--table with scoreboard-->
           <table class="table table-hover table-sm">
             <thead>
             <tr>
-              <th>#</th>
+              <th>Poz.</th>
               <th>Gracz</th>
-              <th>Punkty</th>
+              <th>Poł.</th>
+              <th>Pkt</th>
+              <th>Sos</th>
+              <th>Sosos</th>
+              <th>Sodos</th>
             </tr>
             </thead>
             <tbody>
-              <tr is="player" v-for="player in scoreboard(players)" :key="player.playerId" :player="player"></tr>
+              <tr is="player" v-for="(player, index) in scoreboard(players)" :key="player.playerId" :player="player"></tr>
             </tbody>
           </table>
-
         </div>
+      </div>
 
-        <div class="col col-md">
-
+      <!--Matches table in rounds-->
+      <div class="row row-space">
+        <div class="col">
           <!--tabela meczy-->
           <table class="table table-hover table-sm">
             <thead>
@@ -70,9 +79,10 @@
             <option v-for="round in rounds">{{round.roundId}}</option>
           </select>
         </div>
-
       </div>
-      <div class="row">
+
+      <!--games in match table-->
+      <div class="row row-space">
         <div class="col">
           <table class="table table-hover table-sm">
             <thead>
@@ -118,170 +128,14 @@
           </table>
         </div>
       </div>
+
+
     </div>
   </div>
 
   <script src="public/vue-app/components.js"></script>
   <script src="public/vue-app/app.js"></script>
 
-<<<<<<< HEAD
-=======
-  <script>
-
-
-      Vue.component('player',{
-          props: ['player'],
-          template: '<tr><td>{{player.playerId}}</td>' +
-          '<td>{{player.name}}</td>' +
-          '<td>{{player.points}}</td></tr>'
-      });
-      Vue.component('match',{
-          props: ['match'],
-          template: '<tr>' +
-          '<td>{{match.matchId}}</td>' +
-          '<td>{{match.red}}</td>' +
-          '<td>{{match.blue}}</td>' +
-          '<td>{{match.redPoints}} - {{match.bluePoints}}</td>' +
-          '<td>{{winner}}</td>' +
-          '</tr>',
-          data: function () {
-              if(this.match.redPoints > this.match.bluePoints){
-                  return {winner : this.match.red}
-              } else if(this.match.redPoints < this.match.bluePoints){
-                  return {winner : this.match.blue}
-              } else {
-                  return {winner : "-"}
-              }
-          }
-      });
-      Vue.component('game',{
-          props: ['game'],
-          template: '<tr><td>{{game.gameId}}</td><td>{{game.winner}}</td></tr>'
-      });
-
-
-
-      let app = new Vue({
-          el: '#webapp',
-          data: {
-              "tournament": {},
-              "players": [
-                 
-                  ],
-              "rounds": [
-
-              ],
-              "matches": [
-               
-              ],
-              "games": [
-                
-              ],
-              "ui":{
-                  player:null,
-                  round:null,
-                  match:0,
-                  game:null,
-              }
-          },
-          methods: {
-              scoreboard: function (players) {
-                  return _.orderBy(players,['points','name'],['desc'])
-              },
-              roundMatches: function (roundNumber) {
-                  if(roundNumber !== 0){
-                      let round = _.find(this.rounds, function(round) { return round.roundId === roundNumber; });
-                      return _.filter(this.matches, function(match){
-                          return  _.includes(round.matches,match.matchId)
-                      })
-                  } else {
-                      return this.matches
-                  }
-
-              }
-          }
-      });
-
-      const  socket = io();
-      /*testing*/
-      socket.on('data',function(response){
-          console.log("Emit: "+ (new Date()).getTime());
-
-          /*big piece on ugly code :D*/
-
-          /*if this works i go to drink...*/
-
-          if(response.action !== "assign"){
-              if(response.filter){
-                  let filter = response.filter;
-                  let value = response.value;
-                  if(response.get){
-                      app[response.table].find(function(obj){
-                          return obj[filter] === value;
-                      })[response.get][response.action](response.data);
-                      return;
-                  }
-                  app[response.table].find(function(obj){
-                      return obj[filter] === value;
-                  })[response.action](response.data);
-
-                  return;
-              }
-              if(response.get){
-                  app[response.table][response.get][response.action](response.data);
-                  return;
-              }
-              app[response.table][response.action](response.data);
-          }
-          else {
-              if(response.filter){
-                  let filter = response.filter;
-                  let filterValue = response.value;
-
-                  if(response.get){
-                      _.forIn(response.data,function(value,key){
-                          app[response.table].find(function(obj){
-                              return obj[filter] === filterValue;
-                          })[response.get][key] = value;
-                      });
-                      return;
-                  }
-
-                  _.forIn(response.data,function(value,key){
-                      app[response.table].find(function(obj){
-                          return obj[filter] === filterValue;
-                      })[key] = value;
-                  });
-                  return;
-              }
-              if(response.get){
-                  _.forIn(response.data,function(value,key){
-                      app[response.table][response.get][key] = value;
-                  });
-                  return;
-              }
-              _.forIn(response.data,function(value,key){
-                  app[response.table][key] = value;
-              });
-
-
-          }
-
-      })
-
-      socket.on('database',function (response) {
-          app.tournament = response.tournament;
-          app.players = response.players;
-          app.rounds = response.rounds;
-          app.matches = response.matches;
-          app.games = response.games;
-      })
-
-      socket.on('players',function (response) {
-          console.log(response);
-      })
-    </script>
->>>>>>> 483b44d1072dda9dd9b157fae6bef529242992a3
   </body>
 </html>
 

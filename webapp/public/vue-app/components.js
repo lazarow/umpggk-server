@@ -1,6 +1,7 @@
 Vue.component('player', {
-    props: ['player'],
-    template: '<tr><td>{{player.playerId}}</td>' +
+    props: ['player','index'],
+    template:
+    '<tr><td>{{index}}</td>' +
     '<td>{{player.name}}</td>' +
     '<td>{{player.points}}</td></tr>'
 });
@@ -35,15 +36,24 @@ Vue.component('game', {
 
 Vue.component('admin', {
     props: ['players'],
-    template: `
-<div class="row admin-component">
+    template: `<div class="row admin-component">
   <div class="col">
-    <button type="button" class="btn btn-secondary" v-on:click="openRegistration()">Open registration</button>
-    <button type="button" class="btn btn-secondary">Free</button>
-    <button type="button" class="btn btn-secondary">Free</button>
-    <button type="button" class="btn btn-secondary">Free</button>
-    <button type="button" class="btn btn-secondary">Free</button>
-    <button type="button" class="btn btn-secondary">Free</button>
+  
+   <div class="form-group row">
+    <label for="token-input" class="col-2 col-form-label">Token</label>
+    <div class="col-6">
+    <input class="form-control" v-model="token" type="password" value="" id="token-input">
+    </div>
+   </div>
+   
+   <div class="form-group row">
+    <label for="open-btn" class="col-2 col-form-label"></label>
+    <div class="col-6">
+    <input type="button" v-on:click="openRegistration()" class="form-control btn btn-warning" value="Open registration" id="open-btn">
+    </div>
+   </div>
+
+    
   </div>
   <div class="col-6 col-md-4">
     <div class="dropdown">
@@ -56,13 +66,11 @@ Vue.component('admin', {
     </div>
     <br/>
     <button type="button" class="btn btn-danger">Delete player</button>
-   
   </div>
 </div>`,
     methods: {
         openRegistration(){
-            console.log(location.hostname);
-            axios.get('http://'+location.hostname+':8001/tournament/open-registration?token=replace-it')
+            axios.get('http://'+location.hostname+':8001/tournament/open-registration?token='+this.token)
                 .then(function (response) {
                     console.log(response);
                     console.log('success');
@@ -72,6 +80,9 @@ Vue.component('admin', {
                     console.log('error');
                 });
         }
+    },
+    data: function () {
+        return {token:''};
     }
 
 });

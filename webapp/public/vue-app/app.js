@@ -1,7 +1,12 @@
 
+var router = new VueRouter({
+    mode: 'history',
+    routes: []
+});
+
 let app = new Vue({
     el: '#webapp',
-
+    router,
     data: {
         "tournament": {},
         "players": [
@@ -36,6 +41,17 @@ let app = new Vue({
             } else {
                 return this.matches
             }
+
+        },
+        adminPanel: function () {
+            console.log(this.$route);
+
+        }
+
+    },
+    computed: {
+        adminPanel: function () {
+            return this.$route.query.adminPanel
 
         }
     }
