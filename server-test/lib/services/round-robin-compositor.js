@@ -39,17 +39,17 @@ class RoundRobinCompositor extends RoundCompositor
             if (n % 2 !== 0) {
                 n++;
                 upper = _.range(2, n / 2 + 1);
-                lower = _.range(n - 1, n / 2 + 2);
+                lower = _.range(n - 1, n / 2);
                 lower[0] = -1;
             } else {
                 upper = _.range(2, n / 2 + 1);
-                lower = _.range(n - 1, n / 2 + 2);
+                lower = _.range(n - 1, n / 2);
             }
             for (let r = 0; r < n - 1; ++r) {
                 if (rotatedOut != -1) {
                     games.push([participants[fixed], participants[rotatedOut]]);
                 }
-                for (let  i = 0, count = upper.length - 1; i <= count; ++i) {
+                for (let  i = 0, count = upper.length; i < count; ++i) {
                     if (upper[i] != -1 && lower[i] != -1) {
                         games.push([participants[upper[i]], participants[lower[i]]]);
                     }
@@ -57,7 +57,6 @@ class RoundRobinCompositor extends RoundCompositor
                 rotateForRoundRobin();
             }
         }
-		console.log(games);
         // Compose rounds
         this.precomposedRounds = [];
         for (let idx in games) {

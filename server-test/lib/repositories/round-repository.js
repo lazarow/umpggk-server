@@ -64,6 +64,7 @@ class RoundRepository extends Repository
 			} else if (match.finishedAt === null) {
 				addressesInMatches.push(playerRepository.get(match.red).value().remoteAddress);
 				addressesInMatches.push(playerRepository.get(match.blue).value().remoteAddress);
+				started++;
 			}
 		}
 		// If nothing to start then finish the round

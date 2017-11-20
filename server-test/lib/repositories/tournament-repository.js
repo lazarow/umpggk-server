@@ -50,6 +50,7 @@ class TournamentRepository extends Repository
 			this.setCurrentRound(round.id);
 			require("./round-repository.js").start(round.id);
 		}
+		return round;
 	}
 }
 
