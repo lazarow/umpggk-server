@@ -6,7 +6,7 @@ var router = new VueRouter({
 
 let app = new Vue({
     el: '#webapp',
-    router,
+    router: router,
     data: {
         "tournament": {},
         "players": [
@@ -43,11 +43,6 @@ let app = new Vue({
             }
 
         },
-        adminPanel: function () {
-            console.log(this.$route);
-
-        }
-
     },
     computed: {
         adminPanel: function () {

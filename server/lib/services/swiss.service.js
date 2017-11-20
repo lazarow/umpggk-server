@@ -12,13 +12,19 @@ const
 
 class SwissService
 {
-    constructor() {
-        this.precomposedRounds = null;
-    }
 
-    let
-        matches = [],
-        players = [],
+    /*
+    MKL
+    players interface
+    * type: array
+    * player interface
+    * type: object
+    * {
+    *   name: string,
+    *   points: number
+    * }
+    * */
+
 
     randomPairs(players){
         let pairs;
@@ -30,6 +36,10 @@ class SwissService
             if(index % 2 === 1){
                 return [player, players[index-1]];
             }
+            return null;
+
+        }).filter(function (o) {
+            return o !== null;
         });
         if(popped){
             pairs.push([popped])
@@ -37,24 +47,56 @@ class SwissService
         return pairs;
     }
 
-    preparePairs(){
+    findStrongestOpponent(player,players){
+            _(players).filter(function (o) {
+                return o.name !== player.name
+            })
+                .filter(function (o) {
+                    return o.pair === null;
+                })
+                .filter(function(o){
+                    /*TODO check if played */
+                    return !playerRepository.playedWith(player.name,o.name);
+                })
+                .sort(['points','name'])
+                .shift()
+    };
 
-    }
-    checkPair(playerName,oponnentName){
+    swissPairs(players){
+        let pairs;
 
-        let opponents = playerRepository.db.get('players').find({name:playerName}).get('opponents').value();
-
-
-    }
-
-    composeNextRound() {
-
-        if(tournamentRepository.hasUnfinishedRounds()){
-            return;
+        /*TODO check if popped player had free game*/
+        let popped;
+        if(players.length() % 2 !== 0){
+            popped = players.pop();
         }
 
-        this.preparePairs();
-
+        pairs = _(players)
+            .sort(['points','name'])
+            .map(function(player){
+                player.pair = null;
+            })
+            .map(function(player,index,players){
+                if(player.pair){
+                    return player;
+                } else {
+                    let opponent = _(players).find({'pair': player.name});
+                    if(opponent){
+                        player.pair = opponent.name;
+                    } else {
+                        opponent = this.findStrongestOpponent(player,players);
+                        player.pair = opponent.name;
+                    }
+                    opponent = null;
+                    return player;
+                }
+            })
+            .map(function(player,index,players){
+                return [player, players[_(players).findIndex({'pair': player.pair})]];
+            })
+            .filter(function(o){
+                return o !== null;
+            })
     }
 }
 
