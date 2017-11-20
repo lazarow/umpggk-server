@@ -62,15 +62,16 @@ class RoundRobinCompositor extends RoundCompositor
         for (let idx in games) {
 			const game = games[idx];
             if (players.indexOf(game[0]) !== -1 || players.indexOf(game[1]) !== -1) {
-                this.precomposedRounds.push(roundGames.map((item) => { return item.slice(0); }));
-                roundGames = players = [];
+                this.precomposedRounds.push(roundGames.slice(0));
+                roundGames = [];
+				players = [];
             }
             roundGames.push(game.slice(0));
             players.push(game[0]);
             players.push(game[1]);
         }
         if (roundGames.length > 0) {
-            this.precomposedRounds.push(roundGames.map((item) => { return item.slice(0); }));
+            this.precomposedRounds.push(roundGames.slice(0));
         }
     }
     composeNextRound() {
@@ -78,8 +79,11 @@ class RoundRobinCompositor extends RoundCompositor
         if (this.precomposedRounds.length === 0) {
             return null;
         }
-        let	matches = this.precomposedRounds.shift(),
-        	round   = roundRepository.create();
+        let	round   = roundRepository.create(),
+			matches = this.precomposedRounds[round.id];
+		if (matches === undefined) {
+			return null;
+		}
 		for (let idx in matches) {
 			let	pairing = matches[idx],
 				match	= matchRepository.create(round.id, pairing[0], pairing[1]),
