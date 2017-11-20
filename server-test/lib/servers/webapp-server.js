@@ -10,8 +10,8 @@ WebAppServer.prototype.start = function (options) {
     });
     this.httpServer.listen(options.port);
 	io.createSocketIoServer(this.httpServer.server);
-    log.info("The web app server is listening on the address: " + this.httpServer.server.address().address
-		+ " and the port: " + this.httpServer.server.address().port);
+    log.colors("magenta").info("The web app server is listening on the address: "
+		+ this.httpServer.server.address().address + " and the port: " + this.httpServer.server.address().port);
 };
 
 module.exports = new WebAppServer();

@@ -6,9 +6,16 @@
         "gamesLimit": 2,
 		"additionalRounds": null
 	},
+	"TournamentServer": {
+        "port": 6789
+    },
 	"WebAppServer": {
         "path": "./../webapp",
         "port": 8000
+    },
+	"AdminServer": {
+        "port": 8001,
+		"token": "replace-it"
     },
 	"Database": {
 		"path" : "./../saves/"
