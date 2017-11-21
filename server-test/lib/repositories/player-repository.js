@@ -1,4 +1,5 @@
-const	Repository	= require("./repository.js");
+const	Repository	= require("./repository.js"),
+		sockets		= require("../servers/sockets.js");
 
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -49,7 +50,7 @@ class PlayerRepository extends Repository
     reconnect(name, socketId) {
         this.get(name).assign(this._.assign(this.get(name).value(), {
 	        socketId: socketId,
-			remoteAddress: "127.0.0.1",
+			remoteAddress: sockets[socketId].remoteAddress,
 	        connected: true,
 	        connectedAt: (new Date()).getTime()
         })).write();

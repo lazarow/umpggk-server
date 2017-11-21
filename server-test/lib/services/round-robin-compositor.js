@@ -39,17 +39,17 @@ class RoundRobinCompositor extends RoundCompositor
             if (n % 2 !== 0) {
                 n++;
                 upper = _.range(2, n / 2 + 1);
-                lower = _.range(n - 1, n / 2 + 2);
+                lower = _.range(n - 1, n / 2);
                 lower[0] = -1;
             } else {
                 upper = _.range(2, n / 2 + 1);
-                lower = _.range(n - 1, n / 2 + 2);
+                lower = _.range(n - 1, n / 2);
             }
             for (let r = 0; r < n - 1; ++r) {
                 if (rotatedOut != -1) {
                     games.push([participants[fixed], participants[rotatedOut]]);
                 }
-                for (let  i = 0, count = upper.length - 1; i <= count; ++i) {
+                for (let  i = 0, count = upper.length; i < count; ++i) {
                     if (upper[i] != -1 && lower[i] != -1) {
                         games.push([participants[upper[i]], participants[lower[i]]]);
                     }
@@ -57,21 +57,21 @@ class RoundRobinCompositor extends RoundCompositor
                 rotateForRoundRobin();
             }
         }
-		console.log(games);
         // Compose rounds
         this.precomposedRounds = [];
         for (let idx in games) {
 			const game = games[idx];
             if (players.indexOf(game[0]) !== -1 || players.indexOf(game[1]) !== -1) {
-                this.precomposedRounds.push(roundGames.map((item) => { return item.slice(0); }));
-                roundGames = players = [];
+                this.precomposedRounds.push(roundGames.slice(0));
+                roundGames = [];
+				players = [];
             }
             roundGames.push(game.slice(0));
             players.push(game[0]);
             players.push(game[1]);
         }
         if (roundGames.length > 0) {
-            this.precomposedRounds.push(roundGames.map((item) => { return item.slice(0); }));
+            this.precomposedRounds.push(roundGames.slice(0));
         }
     }
     composeNextRound() {
@@ -79,8 +79,11 @@ class RoundRobinCompositor extends RoundCompositor
         if (this.precomposedRounds.length === 0) {
             return null;
         }
-        let	matches = this.precomposedRounds.shift(),
-        	round   = roundRepository.create();
+        let	round   = roundRepository.create(),
+			matches = this.precomposedRounds[round.id];
+		if (matches === undefined) {
+			return null;
+		}
 		for (let idx in matches) {
 			let	pairing = matches[idx],
 				match	= matchRepository.create(round.id, pairing[0], pairing[1]),
