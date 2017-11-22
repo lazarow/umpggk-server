@@ -48,12 +48,7 @@ class SwissService
     }
 
     findStrongestOpponent(player,players){
-            _(players).filter(function (o) {
-                return o.name !== player.name
-            })
-                .filter(function (o) {
-                    return o.pair === null;
-                })
+            return _(players)
                 .filter(function(o){
                     /*TODO check if played */
                     return !playerRepository.playedWith(player.name,o.name);
@@ -62,41 +57,23 @@ class SwissService
                 .shift()
     };
 
-    swissPairs(players){
-        let pairs;
+    monradPairs(players){
+        let pairs = [];
 
-        /*TODO check if popped player had free game*/
-        let popped;
-        if(players.length() % 2 !== 0){
-            popped = players.pop();
+        while(players.length > 1){
+
+            let playerOne = players.shift();
+
+            let playerTwo = this.findStrongestOpponent(player,players);
+
+            players.splice(_.findIndex(players,{'name':playerTwo.name}),1);
+
+            pairs.push([playerOne.name,playerTwo.name])
+
         }
 
-        pairs = _(players)
-            .sort(['points','name'])
-            .map(function(player){
-                player.pair = null;
-            })
-            .map(function(player,index,players){
-                if(player.pair){
-                    return player;
-                } else {
-                    let opponent = _(players).find({'pair': player.name});
-                    if(opponent){
-                        player.pair = opponent.name;
-                    } else {
-                        opponent = this.findStrongestOpponent(player,players);
-                        player.pair = opponent.name;
-                    }
-                    opponent = null;
-                    return player;
-                }
-            })
-            .map(function(player,index,players){
-                return [player, players[_(players).findIndex({'pair': player.pair})]];
-            })
-            .filter(function(o){
-                return o !== null;
-            })
+        /*TODO check if popped player had free game*/
+
     }
 }
 
