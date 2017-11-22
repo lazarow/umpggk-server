@@ -21,4 +21,4 @@ tournamentRepository.create(config.get("Tournament"));
 // Load commands protocol
 container.value("Command", require("./lib/protocol/command.js"));
 // Set a round compositor
-container.value('round-compositor', require("./lib/services/round-robin-compositor.js"));
+container.value('RoundCompositor', require("./lib/services/round-robin-compositor.js"));
