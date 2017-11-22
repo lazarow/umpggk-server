@@ -13,6 +13,9 @@ class PlayerRepository extends Repository
 	get(name) {
 		return this.collection().find({ name: name });
 	}
+	getBySocketId(socketId) {
+		return this.collection().find({ socketId: socketId });
+	}
 	// Connection
 	isRegistered(name) {
         return this.get(name).value() !== undefined;

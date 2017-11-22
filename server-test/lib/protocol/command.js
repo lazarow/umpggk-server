@@ -2,6 +2,7 @@ const
     injector            	= require('./../container/injector.js'),
 	tournamentRepository	= require("./../repositories/tournament-repository.js"),
     playerRepository    	= require("./../repositories/player-repository.js"),
+    gameRepository         = require("./../repositories/game-repository.js"),
 	socketService			= require("./../services/socket-service.js"),
     log                 	= require("./../log.js")(__filename);
 
@@ -35,6 +36,13 @@ Command.prototype['100'] = function (socketId, name) {
 		}
     }
     return true;
+};
+
+// Move
+Command.prototype['200'] = function (socketId) {
+    const   info    = Array.prototype.slice.call(arguments, 1),
+            player  = playerRepository.getBySocketId(socketid),
+            game    = gameRepository.get(player.value().currentGame);
 };
 
 module.exports = new Command();

@@ -1,4 +1,4 @@
-const
+constsocketId
     net                 = require("net"),
     config              = require("config"),
     shortid             = require("shortid"),
