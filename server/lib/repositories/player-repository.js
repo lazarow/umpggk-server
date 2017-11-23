@@ -66,13 +66,27 @@ class PlayerRepository extends Repository
     isOnline(name) {
         return this.db().get("players").find({name: name}).value().connected;
     }
+
+    /*Should be get players  cus it return whole player object not only name ?*/
     getNames() {
         return Object.keys(this.db().get("players").value());
     }
+
 	setCurrentGame(name, gameId) {
 		const player = this.db().get("players").find({name: name});
 		return player.assign(this._.assign(player.value(), {currentGame: gameId})).write();
 	}
+
+	playedWith(player,opponent){
+        const player = this.db().get("players").find({name: name});
+        return false;
+        /*TODO*/
+    }
+    hadFreeGame(player){
+	    /*TODO*/
+	    return false;
+    }
+
 }
 
 module.exports = new PlayerRepository();

@@ -1,0 +1,18 @@
+.admin-component{
+  margin: 20px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 20px 10px;
+}
+
+
+#webapp{
+  padding: 20px 0 0 50px;
+}
+
+.row-space{
+  margin: 30px 0 40px;
+  border:1px solid #eceeef;
+  border-radius: 10px;
+  padding: 10px 5px;
+}

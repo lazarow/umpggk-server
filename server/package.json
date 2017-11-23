@@ -3,6 +3,7 @@
     "bower": "latest",
     "color-logs": "^0.6.1",
     "config": "latest",
+    "cors": "^2.8.4",
     "express": "latest",
     "http-server": "latest",
     "is-promise": "^2.1.0",

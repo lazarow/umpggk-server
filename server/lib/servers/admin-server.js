@@ -2,11 +2,13 @@ const
     express         	= require("express"),
     tournamenRepository	= require('./../repositories/tournament-repository.js'),
 	log 				= require("./../log.js")(__filename);
+	cors				= require('cors')
 
 const AdminServer = function () {};
 
 AdminServer.prototype.start = function (options) {
     const app = express();
+    app.use(cors());
 	app.use(function (req, res, next) {
 		if (options.token === req.query.token) {
 			next();
