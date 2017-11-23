@@ -44,7 +44,7 @@ class TournamentRepository extends Repository
 		this.get().assign(this._.assign(this.get().value(), { registration: false })).write();
 	}
 	startNextRound() {
-		const 	roundCompositor = injector.get("round-compositor"),
+		const 	roundCompositor = injector.get("RoundCompositor"),
 				round = roundCompositor.composeNextRound();
 		if (round !== null) {
 			this.setCurrentRound(round.id);
