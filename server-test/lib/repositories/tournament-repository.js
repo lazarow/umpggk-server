@@ -15,6 +15,8 @@ class TournamentRepository extends Repository
 	 */
 	create(options) {
 		const tournament = {
+			// Game
+			game: options.game,
 			// Tournament
 			gamesLimit: options.gamesLimit,
 			timeLimit: options.timeLimit,

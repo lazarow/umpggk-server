@@ -46,4 +46,4 @@ Command.prototype['210'] = function (socketId) {
 	return game === undefined ? false : gameRepository.move(game.id, player, move);
 };
 
-module.exports = new Command();
+module.exports = Command;

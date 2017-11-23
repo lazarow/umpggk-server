@@ -1,5 +1,7 @@
 class GameController
 {
+	constructor() {
+	}
 	whoFirst() {
 		return "white";
 	}
