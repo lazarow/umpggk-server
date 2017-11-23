@@ -54,11 +54,38 @@ class SwissService
                     return !playerRepository.playedWith(player.name,o.name);
                 })
                 .sort(['points','name'])
-                .shift()
+                .head()
+               /* .value()*/
     };
+
+    findWeakestPlayerForFreeGame(players){
+
+        return _(players)
+            .sort(['points','name'])
+            .reduce(function(weakest,current){
+
+                if(!current){
+                    return weakest
+                }
+                 else if(current.points < weakest.points && !playerRepository.hadFreeGame(current.name)){
+                    return weakest
+                }
+                    return current
+
+            },false)
+
+    }
 
     monradPairs(players){
         let pairs = [];
+        let freeGamePlayer;
+
+        if(players.length % 2 !== 0){
+            freeGamePlayer = this.findWeakestPlayerForFreeGame()
+        }
+
+        players.splice(_.findIndex(players,{'name':freeGamePlayer.name}),1);
+
 
         while(players.length > 1){
 
@@ -72,7 +99,12 @@ class SwissService
 
         }
 
-        /*TODO check if popped player had free game*/
+        /*TODO hot to pass free game player?*/
+        if(freeGamePlayer){
+            pairs.push([freeGamePlayer.name,{}]);
+        }
+
+        return pairs;
 
     }
 }

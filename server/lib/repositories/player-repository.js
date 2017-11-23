@@ -80,6 +80,10 @@ class PlayerRepository extends Repository
         return false;
         /*TODO*/
     }
+    hadFreeGame(player){
+	    /*TODO*/
+	    return false;
+    }
 
 }
 
