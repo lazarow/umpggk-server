@@ -39,10 +39,11 @@ Command.prototype['100'] = function (socketId, name) {
 };
 
 // Move
-Command.prototype['200'] = function (socketId) {
-    const   info    = Array.prototype.slice.call(arguments, 1),
+Command.prototype['210'] = function (socketId) {
+    const   move    = Array.prototype.slice.call(arguments, 1),
             player  = playerRepository.getBySocketId(socketid),
             game    = gameRepository.get(player.value().currentGame);
+	return game === undefined ? false : gameRepository.move(game.id, player, move);
 };
 
 module.exports = new Command();

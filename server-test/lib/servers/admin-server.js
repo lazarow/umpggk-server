@@ -1,7 +1,6 @@
-const
-    express         	= require("express"),
-    tournamenRepository	= require('./../repositories/tournament-repository.js'),
-	log 				= require("./../log.js")(__filename);
+const	express         	= require("express"),
+    	tournamenRepository	= require('./../repositories/tournament-repository.js'),
+		log 				= require("./../log.js")(__filename);
 
 const AdminServer = function () {};
 

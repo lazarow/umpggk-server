@@ -22,3 +22,5 @@ tournamentRepository.create(config.get("Tournament"));
 container.value("Command", require("./lib/protocol/command.js"));
 // Set a round compositor
 container.value('RoundCompositor', require("./lib/services/round-robin-compositor.js"));
+// Set a game controller
+container.value('GameController', require("./lib/game-controller.js"));

@@ -1,5 +1,6 @@
-const	Repository	= require("./repository.js"),
-		sockets		= require("../servers/sockets.js");
+const	Repository		= require("./repository.js"),
+		sockets			= require("./../servers/sockets.js"),
+		socketsService	= require("./../services/socket-service.js");
 
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -139,6 +140,9 @@ class PlayerRepository extends Repository
 		});
 		return names;
     }
+	write(name, message) {
+		socketsService.write(this.get(name).value().socketId, message);
+	}
 }
 
 function sumUp(what, sum, who) {

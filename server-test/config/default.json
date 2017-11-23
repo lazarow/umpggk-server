@@ -1,6 +1,9 @@
 {
 	"Tournament": {
-		"game": "nogo",
+		"game": {
+			"name": "nogo",
+			"boardSize": 9
+		},
         "type": "round-robin",
 		"timeLimit": 2000,
         "gamesLimit": 2,
@@ -31,5 +34,9 @@
 	    "matches": [],
 	    "games": [],
 		"reloadedAt": null
-    }
+    },
+	"Controls": {
+		"registrationStart": "auto",
+		"roundsStart": "auto"
+	}
 }

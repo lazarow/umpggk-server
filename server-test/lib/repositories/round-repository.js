@@ -2,7 +2,8 @@ const	Repository				= require("./repository.js"),
 		tournamentRepository	= require("./tournament-repository.js"),
 		playerRepository		= require("./player-repository.js"),
 		matchRepository			= require("./match-repository.js"),
-		log 					= require("./../log.js")(__filename);
+		log 					= require("./../log.js")(__filename),
+		config					= require("config");
 
 class RoundRepository extends Repository
 {
@@ -37,6 +38,9 @@ class RoundRepository extends Repository
 		allPlayersNames.forEach((name) => { playerRepository.computeSumOfOpponentsScores(name); });
 		allPlayersNames.forEach((name) => { playerRepository.computeSumOfOpponentsSos(name); });
 		allPlayersNames.forEach((name) => { playerRepository.computeSumOfDefetedOpponentsScores(name); });
+		if (config.get("Controls").roundsStart === "auto") {
+			tournamentRepository.startNextRound();
+		}
 	}
 	// Collections
 	addMatch(roundId, matchId) {
