@@ -24,7 +24,11 @@ class SwissService
     *   points: number
     * }
     * */
+    /*TODO check uneven players number*/
 
+    getPlayers(){
+        return playerRepository.getNames();
+    }
 
     randomPairs(players){
         let pairs;
@@ -99,12 +103,49 @@ class SwissService
 
         }
 
-        /*TODO hot to pass free game player?*/
+        /*TODO how to pass free game player?*/
         if(freeGamePlayer){
             pairs.push([freeGamePlayer.name,{}]);
         }
 
         return pairs;
+    }
+
+    prepareRound(){
+
+        let pairs;
+        let players = this.getPlayers();
+
+        if(tournamentRepository.hasRound()){
+            pairs = this.monradPairs(players);
+        } else {
+            pairs = this.randomPairs(players);
+        }
+
+        let
+            round   = roundRepository.create(),
+            roundId = round.id;
+
+        pairs.forEach(function(pair){
+
+            let
+                match	= matchRepository.create(pair[0], pair[1]),
+                matchId	= match.id;
+            total	= tournamentRepository.getNumberOfGamesInSingleMatch,
+                middle	= Math.floor(total / 2);
+            for (let i = 0; i < total; ++i) {
+                let game;
+                if (i <= middle) {
+                    gameRepository.create(pair[0], pair[1]);
+                } else {
+                    gameRepository.create(pair[1], pair[0]);
+                }
+                matchRepository.addGame(matchId, game.id);
+            }
+            roundRepository.addMatch(roundId, match.id);
+
+        });
+        tournamentRepository.addRound(roundId);
 
     }
 }

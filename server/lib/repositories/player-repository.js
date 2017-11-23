@@ -66,6 +66,8 @@ class PlayerRepository extends Repository
     isOnline(name) {
         return this.db().get("players").find({name: name}).value().connected;
     }
+
+    /*Should be get players  cus it return whole player object not only name ?*/
     getNames() {
         return Object.keys(this.db().get("players").value());
     }

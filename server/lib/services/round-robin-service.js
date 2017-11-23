@@ -59,15 +59,16 @@ class RoundRobinService
         this.precomposedRounds = [];
         for (let game in games) {
             if (players.indexof(game[0]) !== -1 || players.indexof(game[1])) {
-                this.precomposedRounds.push(roundGames.map((item) => item.slice(0));
+                this.precomposedRounds.push(roundGames.map((item) => item.slice(0)); /*missing ) TODO*/
                 roundGames = players = [];
             }
+            /* syntax error ? [] TODO*/
             roundGames[] = game.slice(0);
             players.push(game[0]);
             players.push(game[1]);
         }
         if (roundGames.length > 0) {
-            this.precomposedRounds.push(roundGames.map((item) => item.slice(0));
+            this.precomposedRounds.push(roundGames.map((item) => item.slice(0)); /*missing ) TODO*/
         }
     }
     composeNextRound() {
@@ -88,10 +89,13 @@ class RoundRobinService
 			for (let i = 0; i < total; ++i) {
 				let game;
 				if (i <= middle) {
+				    /*TODO gameRepository not game*/
 					game.create(pairing[0], pairing[1]);
 				} else {
+                    /*TODO gameRepository not game*/
 					game.create(pairing[1], pairing[0]);
 				}
+				/*TODO gameRepository not game*/
 				matchRepository.addGame(matchId, game.id);
 			}
 			roundRepository.addMatch(roundId, match.id);

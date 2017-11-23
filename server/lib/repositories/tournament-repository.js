@@ -46,6 +46,9 @@ class TournamentRepository extends Repository
 			}
 		}
 	}
+	hasRound(){
+		return !!this.db().get("tournament").value().rounds.length;
+	}
 	isRegistrationOpen() {
 		return this.db().get("tournament").value().registration;
 	}
