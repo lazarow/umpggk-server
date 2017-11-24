@@ -5,21 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title></title>
-    <link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="public/styles/app.css">
-
-    <!--move scripts to bottom-->
-    <script src="public/bower/jquery/dist/jquery.js"></script>
-    <script src="public/bower/tether/dist/js/tether.js"></script>
-    <script src="public/bower/tether/dist/css/tether.css"></script>
-    <script src="public/bower/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
-    <script src="public/bower/lodash/dist/lodash.js"></script>
-    <script src="public/bower/axios/dist/axios.js"></script>
-    <script src="public/bower/vue/dist/vue.js"></script>
-    <script src="public/bower/vue-router/dist/vue-router.js"></script>
-
+    <title>UMPGGK 2017</title>
+	<!-- Styles -->
+	<link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="public/styles/app.css">
+	<!-- Required libraries -->
+	<script src="public/bower/jquery/dist/jquery.js"></script>
+	<script src="public/bower/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
+	<script src="public/bower/lodash/dist/lodash.js"></script>
+	<script src="public/bower/axios/dist/axios.js"></script>
+	<!-- Application -->
+	<script src="public/vue-app/socket.js"></script>
+	<script src="public/bower/vue/dist/vue.js"></script>
+	<script src="public/bower/vue-router/dist/vue-router.js"></script>
   </head>
   <body>
   <div id="webapp">
@@ -28,6 +27,7 @@
 
       <!--admin panel-->
       <admin :players="players" v-if="adminPanel === 'true'"></admin>
+
 
 
       <!--leaderboard table-->
@@ -139,5 +139,3 @@
 
   </body>
 </html>
-
-

@@ -1,0 +1,12 @@
+{
+  "name": "umpggk-server",
+  "dependencies": {
+    "socket.io-client ": "2.0.3",
+    "vue": "latest",
+    "vue-router": "latest",
+    "requirejs": "latest",
+    "bootstrap": "4.0.0-alpha.6",
+    "lodash": "^4.17.4",
+    "axios": "^0.17.1"
+  }
+}
