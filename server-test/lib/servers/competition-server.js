@@ -1,11 +1,10 @@
-constsocketId
-    net                 = require("net"),
-    config              = require("config"),
-    shortid             = require("shortid"),
-    injector            = require("./../container/injector.js"),
-    sockets             = require("./sockets.js"),
-	playerRepository	= require("./../repositories/player-repository.js"),
-	log 				= require("./../log.js")(__filename);
+const	net                 = require("net"),
+    	config              = require("config"),
+    	shortid             = require("shortid"),
+    	injector            = require("./../container/injector.js"),
+    	sockets             = require("./sockets.js"),
+		playerRepository	= require("./../repositories/player-repository.js"),
+		log 				= require("./../log.js")(__filename);
 
 const CompetitionServer = function () {};
 

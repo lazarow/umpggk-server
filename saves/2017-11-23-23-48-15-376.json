@@ -1,0 +1,91 @@
+{
+  "tournament": {
+    "game": {
+      "name": "nogo",
+      "boardSize": 9
+    },
+    "gamesLimit": 2,
+    "timeLimit": 2000,
+    "registration": true,
+    "rounds": [],
+    "currentRound": null
+  },
+  "players": [
+    {
+      "name": "Pikachu",
+      "socketId": 1,
+      "remoteAddress": "1",
+      "connected": true,
+      "connectedAt": 1511477295428,
+      "points": 0,
+      "sos": 0,
+      "sosos": 0,
+      "sodos": 0,
+      "opponents": [],
+      "defetedOpponents": [],
+      "matches": [],
+      "games": [],
+      "currentOpponent": null,
+      "currentMatch": null,
+      "currentGame": null
+    },
+    {
+      "name": "Bulbasaur",
+      "socketId": 2,
+      "remoteAddress": "2",
+      "connected": true,
+      "connectedAt": 1511477295435,
+      "points": 0,
+      "sos": 0,
+      "sosos": 0,
+      "sodos": 0,
+      "opponents": [],
+      "defetedOpponents": [],
+      "matches": [],
+      "games": [],
+      "currentOpponent": null,
+      "currentMatch": null,
+      "currentGame": null
+    },
+    {
+      "name": "Charmander",
+      "socketId": 3,
+      "remoteAddress": "3",
+      "connected": true,
+      "connectedAt": 1511477295441,
+      "points": 0,
+      "sos": 0,
+      "sosos": 0,
+      "sodos": 0,
+      "opponents": [],
+      "defetedOpponents": [],
+      "matches": [],
+      "games": [],
+      "currentOpponent": null,
+      "currentMatch": null,
+      "currentGame": null
+    },
+    {
+      "name": "Zubat",
+      "socketId": 4,
+      "remoteAddress": "4",
+      "connected": true,
+      "connectedAt": 1511477295445,
+      "points": 0,
+      "sos": 0,
+      "sosos": 0,
+      "sodos": 0,
+      "opponents": [],
+      "defetedOpponents": [],
+      "matches": [],
+      "games": [],
+      "currentOpponent": null,
+      "currentMatch": null,
+      "currentGame": null
+    }
+  ],
+  "rounds": [],
+  "matches": [],
+  "games": [],
+  "reloadedAt": null
+}

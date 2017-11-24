@@ -19,6 +19,9 @@ db.createEmptyDatabase();
 tournamentRepository.create(config.get("Tournament"));
 
 // Load commands protocol
-container.value("Command", require("./lib/protocol/command.js"));
+container.value("Command", require("./lib/games/" + tournamentRepository.get().value().game.name + "/command.js"));
 // Set a round compositor
 container.value('RoundCompositor', require("./lib/services/round-robin-compositor.js"));
+// Set a game controller
+container.value('GameController', require("./lib/games/"
+	+ tournamentRepository.get().value().game.name + "/game-controller.js"));

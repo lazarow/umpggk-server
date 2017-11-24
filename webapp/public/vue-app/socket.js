@@ -1,11 +1,13 @@
 const  socket = io();
 
 function pushData(response){
-    app[response.namespace].push(response.data);
+    console.log(app);
+    console.log(response.collection);
+    app[response.collection].push(response.data);
 }
 
 function updateDate(response,key,value){
-    _.assign(_.find(app[response.namespace],[key,value]),response.data);
+    _.assign(_.find(app[response.collection],[key,value]),response.data);
 }
 
 socket.on('games',function(response){
@@ -37,5 +39,6 @@ socket.on('rounds',function(response){
         updateDate(response,'id',response.data.id);
     }
 });
-socket.on('tournament',function(response){
+socket.on('database',function(response){
+    app.data = response;
 });

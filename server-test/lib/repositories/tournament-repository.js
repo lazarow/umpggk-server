@@ -1,5 +1,7 @@
 const	Repository	= require("./repository.js"),
-		injector	= require("./../container/injector.js");
+		injector	= require("./../container/injector.js"),
+		config      = require("config");
+
 
 class TournamentRepository extends Repository
 {
@@ -14,8 +16,11 @@ class TournamentRepository extends Repository
 	 */
 	create(options) {
 		const tournament = {
+			// Game
+			game: options.game,
 			// Tournament
 			gamesLimit: options.gamesLimit,
+			timeLimit: options.timeLimit,
 			// Flags
 			registration: false,
 			// Rounds
@@ -23,6 +28,9 @@ class TournamentRepository extends Repository
 			currentRound: null
         };
 		this.collection().assign(tournament).write();
+		if (config.get("Controls").registrationStart === "auto") {
+			this.openRegistration();
+		}
 		return tournament;
 	}
 	addRound(roundId) {

@@ -17,7 +17,6 @@
     <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
     <script src="public/bower/lodash/dist/lodash.js"></script>
     <script src="public/bower/axios/dist/axios.js"></script>
-    <script src="public/vue-app/socket.js"></script>
     <script src="public/bower/vue/dist/vue.js"></script>
     <script src="public/bower/vue-router/dist/vue-router.js"></script>
 
@@ -29,7 +28,6 @@
 
       <!--admin panel-->
       <admin :players="players" v-if="adminPanel === 'true'"></admin>
-
 
 
       <!--leaderboard table-->
@@ -137,6 +135,7 @@
 
   <script src="public/vue-app/components.js"></script>
   <script src="public/vue-app/app.js"></script>
+  <script src="public/vue-app/socket.js"></script>
 
   </body>
 </html>

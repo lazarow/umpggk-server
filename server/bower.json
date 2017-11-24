@@ -6,6 +6,7 @@
     "vue-router": "latest",
     "requirejs": "latest",
     "bootstrap": "4.0.0-alpha.6",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "axios": "^0.17.1"
   }
 }
