@@ -1,12 +1,19 @@
 const	express         	= require("express"),
+        url                 = require("url"),
     	tournamenRepository	= require('./../repositories/tournament-repository.js'),
-		log 				= require("./../log.js")(__filename);
+		log 				= require("./../log.js")(__filename),
+        cors                = require("cors");
 
 const AdminServer = function () {};
 
 AdminServer.prototype.start = function (options) {
     const app = express();
-	app.use(function (req, res, next) {
+    app.use(cors());
+    app.use(function (req, res, next) {
+        log.info("Request: " + url.parse(req.url).pathname);
+        next();
+    });
+    app.use(function (req, res, next) {
 		if (options.token === req.query.token) {
 			next();
 		} else {

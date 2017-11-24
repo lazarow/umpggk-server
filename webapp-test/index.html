@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Serwer turniejowy</title>
+        <!-- Styles -->
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed&amp;subset=latin-ext" rel="stylesheet">
+        <link rel="stylesheet" href="public/bower/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="public/styles/app.css">
+        <!-- Required libraries -->
+        <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
+        <script src="public/bower/lodash/dist/lodash.js"></script>
+        <script src="public/bower/axios/dist/axios.js"></script>
+        <script src="public/bower/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+               <div id="webapp" class="col-xs-12">
+                   <div class="page-header">
+                       <h1>Serwer turniejowy</h1>
+                   </div>
+                   <admin v-if="displayAdmin"></admin>
+                   <dump-data :data="tournament"></dump-data>
+                   <dump-data :data="players"></dump-data>
+                   <dump-data :data="rounds"></dump-data>
+                   <dump-data :data="matches"></dump-data>
+                   <dump-data :data="games"></dump-data>
+               </div>
+            </div>
+        </div>
+        <!-- Application -->
+        <script src="public/vue-app/components.js"></script>
+        <script src="public/vue-app/app.js"></script>
+        <script src="public/vue-app/socket.js"></script>
+    </body>
+</html>

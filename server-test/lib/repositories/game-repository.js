@@ -58,8 +58,9 @@ class GameRepository extends Repository
 		} else {
 			playerRepository.write(game.white, "200 white " + gameController.getGameDescription());
 			playerRepository.write(game.black, "200 black " + gameController.getGameDescription());
+			const timeLimit = tournamentRepository.get().value().timeLimit;
 			this.get(gameId).assign(this._.assign(game, {
-				time: (new Date()).getTime() + tournamentRepository.get().timeLimit
+				time: (new Date()).getTime() + timeLimit
 			})).write();
 		}
 	}
@@ -74,22 +75,22 @@ class GameRepository extends Repository
 			(game.white === player && game.currentPlayer === "black")
 			|| (game.black === player && game.currentPlayer === "white")
 		) {
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			playerRepository.write(game.white === player ? game.black : game.white, "230"); // win if player makes a move not during his turn
 			playerRepository.write(player, "240");
+			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			return true;
 		}
 		if ((new Date()).getTime() > game.time) {
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			playerRepository.write(game.white === player ? game.black : game.white, "231"); // win if player makes a move after the time limit
 			playerRepository.write(player, "241");
+			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			return true;
 		}
 		const state = gameController.move(game.state, game.white === player ? "white" : "black", move);
 		if (state === false) { // means move is not acceptable
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			playerRepository.write(game.white === player ? game.black : game.white, "230"); // win if player makes a move not during his turn
 			playerRepository.write(player, "240");
+			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			return true;
 		} else {
 			this.get(gameId).assign(this._.assign(game, {
@@ -99,9 +100,9 @@ class GameRepository extends Repository
 			})).write();
 		}
 		if (gameController.isFinished(state, game.currentPlayer === "white" ? "black" : "white")) {
-			this.finish(game.id, player, game.white === player ? game.black : game.white);
 			playerRepository.write(player, "230"); // win if player makes a move not during his turn
 			playerRepository.write(game.white === player ? game.black : game.white, "240");
+			this.finish(game.id, player, game.white === player ? game.black : game.white);
 			return true;
 		} else {
 			playerRepository.write(game.white === player ? game.black : game.white, "220 " + move.join(" "));
@@ -112,16 +113,25 @@ class GameRepository extends Repository
 		}
 	}
 	finish(gameId, winner, loser) {
-		const game = this.get(gameId).value(), startedAt = game.startedAt, finishedAt = (new Date()).getTime();
+		const	game 			= this.get(gameId).value(),
+				startedAt 		= game.startedAt,
+				finishedAt 		= (new Date()).getTime(),
+				matchRepository	= require("./match-repository.js");
 		log.colors("yellow").info("The game #" + gameId + " (the match #" + game.matchId + ") has been finished");
+		playerRepository.setCurrentGame(game.white, null);
+		playerRepository.setCurrentGame(game.black, null);
 		this.get(gameId).assign(this._.assign(game, {
 			winner: winner,
 			loser: loser,
 			finishedAt: finishedAt,
 			duration: finishedAt - startedAt
 		})).write();
-		playerRepository.setCurrentGame(game.white, null);
-		playerRepository.setCurrentGame(game.black, null);
+		if (winner !== null) {
+			require("./match-repository.js").addPoints(game.matchId, winner, 1);
+		} else {
+			require("./match-repository.js").addPoints(game.matchId, game.white, 0.5);
+			require("./match-repository.js").addPoints(game.matchId, game.black, 0.5);
+		}
 		// Start the next game of finish the match
 		require("./match-repository.js").startUncompletedGame(game.matchId);
 	}

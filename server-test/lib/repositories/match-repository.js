@@ -90,6 +90,14 @@ class MatchRepository extends Repository
 			this.finish(matchId);
 		}
 	}
+	addPoints(matchId, player, points) {
+		const match = this.get(matchId).value();
+		if (match.red === player) {
+			this.get(matchId).assign(this._.assign(match, {redPoints: match.redPoints + points})).write();
+		} else {
+			this.get(matchId).assign(this._.assign(match, {bluePoints: match.bluePoints + points})).write();
+		}
+	}
 }
 
 module.exports = new MatchRepository();

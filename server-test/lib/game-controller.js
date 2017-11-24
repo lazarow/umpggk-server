@@ -6,7 +6,7 @@ class GameController
 		return "white";
 	}
 	getGameDescription() {
-		return "9x9";
+		return "";
 	}
 	getInitialState() {
 		return null;

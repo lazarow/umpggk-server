@@ -7,4 +7,4 @@ class GameController extends BaseGameController
 	}
 }
 
-module.exports = GameController;
+module.exports = new GameController();

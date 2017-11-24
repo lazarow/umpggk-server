@@ -41,9 +41,9 @@ Command.prototype['100'] = function (socketId, name) {
 // Move
 Command.prototype['210'] = function (socketId) {
     const   move    = Array.prototype.slice.call(arguments, 1),
-            player  = playerRepository.getBySocketId(socketid),
-            game    = gameRepository.get(player.value().currentGame);
-	return game === undefined ? false : gameRepository.move(game.id, player, move);
+            player  = playerRepository.getBySocketId(socketId),
+            game    = gameRepository.get(player.value().currentGame).value();
+	return game === undefined ? false : gameRepository.move(game.id, player.value().name, move);
 };
 
 module.exports = Command;

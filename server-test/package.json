@@ -2,11 +2,14 @@
   "dependencies": {
     "color-logs": "^0.6.1",
     "config": "^1.28.1",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "http-server": "^0.10.0",
     "lowdb": "^1.0.0",
     "node-di-container": "^0.1.7",
     "shortid": "^2.2.8",
+    "sillyname": "^0.1.0",
+    "sleep": "^5.1.1",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {

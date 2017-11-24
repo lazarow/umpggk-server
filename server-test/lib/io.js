@@ -6,7 +6,7 @@ const io = {
 	createSocketIoServer(server) {
 		this.server = new SocketIoServer(server);
 		this.server.on("connection", function (socket) {
-			socket.emit("database", require("./database/db.js").defaults().value());
+			socket.emit("database", require("./database/db.js").value());
 			log.debug("The new websocket connection from " + socket.remoteAddress);
 	        socket.on("disconnect", function () {
     			log.debug("The websocket client " + socket.remoteAddress + " is disconnected");
