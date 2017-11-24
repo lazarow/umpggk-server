@@ -1,0 +1,13 @@
+{
+  "tournament": {
+    "gamesLimit": 2,
+    "registration": false,
+    "rounds": [],
+    "currentRound": null
+  },
+  "players": [],
+  "rounds": [],
+  "matches": [],
+  "games": [],
+  "reloadedAt": null
+}

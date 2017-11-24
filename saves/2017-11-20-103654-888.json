@@ -1,0 +1,59 @@
+{
+  "tournament": {
+    "game": "nogo",
+    "type": "round-robin",
+    "additionalRounds": null,
+    "timeLimit": 2000,
+    "numberOfGamesInSingleMatch": 10,
+    "registration": true,
+    "currentRound": null,
+    "rounds": []
+  },
+  "players": [
+    {
+      "name": "HeatherlizardToucan",
+      "socketId": null,
+      "connected": false,
+      "connectedAt": null,
+      "points": 0,
+      "currentGame": null,
+      "currentOpponent": null,
+      "currentMatch": null,
+      "deadline": null,
+      "games": [],
+      "matches": [],
+      "opponents": []
+    },
+    {
+      "name": "MangrovevoleFrill",
+      "socketId": null,
+      "connected": false,
+      "connectedAt": null,
+      "points": 0,
+      "currentGame": null,
+      "currentOpponent": null,
+      "currentMatch": null,
+      "deadline": null,
+      "games": [],
+      "matches": [],
+      "opponents": []
+    },
+    {
+      "name": "JustroverGorilla",
+      "socketId": null,
+      "connected": false,
+      "connectedAt": null,
+      "points": 0,
+      "currentGame": null,
+      "currentOpponent": null,
+      "currentMatch": null,
+      "deadline": null,
+      "games": [],
+      "matches": [],
+      "opponents": []
+    }
+  ],
+  "rounds": [],
+  "matches": [],
+  "games": []
+}

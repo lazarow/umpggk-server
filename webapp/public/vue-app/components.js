@@ -3,7 +3,12 @@ Vue.component('player', {
     template:
     '<tr><td>{{index}}</td>' +
     '<td>{{player.name}}</td>' +
-    '<td>{{player.points}}</td></tr>'
+    '<td>{{player.points}}</td>' +
+    '<td>{{player.sos}}</td>' +
+    '<td>{{player.sosos}}</td>' +
+    '<td>{{player.sodos}}</td>' +
+    "<td><span class='status' v-bind:class='{ playerConnected: player.connected }'></span></td></tr>",
+
 });
 
 
@@ -39,30 +44,33 @@ Vue.component('admin', {
     template: `<div class="row admin-component">
   <div class="col">
   
-   <div class="form-group row">
-    <label for="token-input" class="col-2 col-form-label">Token</label>
-    <div class="col-6">
-    <input class="form-control" v-model="token" type="password" value="" id="token-input">
+   <div class="form-group row" >
+    <label for="token-input" class="col-2 col-form-label" v-on:click="toggleTokenInput()">Token</label>
+    <div class="col-12 col-lg-6" v-if="tokenInput">
+    <input class="form-control" type="password" value="" id="token-input">
+       <br/>
+     <input type="button"  class="form-control btn btn-danger" v-on:click="setToken()" value="Set token" id="open-btn">
     </div>
    </div>
+   <hr/>
    
    <div class="form-group row">
     <label for="open-btn" class="col-2 col-form-label"></label>
-    <div class="col-6">
+    <div class="col-12 col-lg-6">
     <input type="button" v-on:click="openRegistration()" class="form-control btn btn-warning" value="Open registration" id="open-btn">
+        <br/>
+        <br/>
+     <input type="button"  class="form-control btn btn-warning" value="Start round" id="open-btn">
     </div>
    </div>
 
     
   </div>
-  <div class="col-6 col-md-4">
+  <div class="col-12 col-lg-4">
     <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Dropdown button
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a  v-for="player in players" class="dropdown-item" href="#">{{player.name}}</a>
-      </div>
+      <select class="custom-select">
+            <option  v-for="player in players" class="dropdown-item" value="player.name">{{player.name}}</option>
+       </select>
     </div>
     <br/>
     <button type="button" class="btn btn-danger">Delete player</button>
@@ -79,10 +87,31 @@ Vue.component('admin', {
                     console.log(error);
                     console.log('error');
                 });
+        },
+        startRound(){
+            axios.get('http://'+location.hostname+':8001/tournament/start-next-round?token='+this.token)
+                .then(function (response) {
+                    console.log(response);
+                    console.log('success');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    console.log('error');
+                });
+        },
+        setToken(){
+            this.tokenInput = false;
+            this.token = $("#token-input").val();
+        },
+        toggleTokenInput(){
+            this.tokenInput = !this.tokenInput;
         }
     },
     data: function () {
-        return {token:''};
+        return {
+            token:'',
+            tokenInput:true,
+        };
     }
 
 });

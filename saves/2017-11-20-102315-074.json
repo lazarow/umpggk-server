@@ -1,0 +1,16 @@
+{
+  "tournament": {
+    "game": "nogo",
+    "type": "round-robin",
+    "additionalRounds": null,
+    "timeLimit": 2000,
+    "numberOfGamesInSingleMatch": 10,
+    "registration": false,
+    "currentRound": null,
+    "rounds": []
+  },
+  "players": [],
+  "rounds": [],
+  "matches": [],
+  "games": []
+}

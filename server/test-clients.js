@@ -6,7 +6,7 @@ const
 	args			= process.argv.slice(2);
 
 let
-	numberOfClients	= 1,
+	numberOfClients	= 4,
 	host			= "127.0.0.1",
 	port			= config.get("TournamentServer").port,
 	clients			= [];

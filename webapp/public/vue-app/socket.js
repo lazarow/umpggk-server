@@ -1,9 +1,8 @@
 const  socket = io();
 
 function pushData(response){
-    console.log(app);
-    console.log(response.collection);
     app[response.collection].push(response.data);
+    console.log(response);
 }
 
 function updateDate(response,key,value){
@@ -40,5 +39,10 @@ socket.on('rounds',function(response){
     }
 });
 socket.on('database',function(response){
-    app.data = response;
+    app.players = response.players;
+    app.tournament = response.tournament;
+    app.rounds = response.rounds;
+    app.matches = response.matches;
+    app.games = response.games;
+    console.log(response);
 });

@@ -27,12 +27,12 @@ playerRepository.reconnect("Charmander", 3);
 playerRepository.register("Zubat");
 playerRepository.reconnect("Zubat", 4);
 
-/*tournamentRepository.startNextRound();
+tournamentRepository.startNextRound();
 gameRepository.finish(0);
 gameRepository.finish(1);
 gameRepository.finish(2);
 gameRepository.finish(3);
-tournamentRepository.startNextRound();*/
+tournamentRepository.startNextRound();
 
 console.log(JSON.stringify(db.value()));
 
