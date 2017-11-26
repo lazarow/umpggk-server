@@ -43,7 +43,8 @@ class PlayerRepository extends Repository
 			// Flags
 			currentOpponent: null,
 			currentMatch: null,
-            currentGame: null
+            currentGame: null,
+			onTheMove: false // Checks if we wait for a player's move
         };
         this.collection().push(player).write();
 		return player;
@@ -109,6 +110,12 @@ class PlayerRepository extends Repository
 		this.get(name).assign(this._.assign(
 			this.get(name).value(),
 			{ currentGame: gameId }
+		)).write();
+	}
+	onTheMove(name, isOnTheMove) {
+		this.get(name).assign(this._.assign(
+			this.get(name).value(),
+			{ onTheMove: isOnTheMove }
 		)).write();
 	}
 	// Points and tie-breakers

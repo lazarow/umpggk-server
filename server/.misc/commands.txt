@@ -1,10 +1,10 @@
 [Client's requests]
 100 [nazwa_gracza]	// Podłącz się jako gracz, nazwa gracza nie może zawierać białych znakow
-210 [pozycja]		// Wyślij ruch
+210 [pozycja]		// Wyślij ruch, gdzie pozycja to wspolrzdne "X Y" (spacja w środku) liczone od lewego gornego rogu tj. punktu "1 1" do prawego dolnego "9 9"
 
 [Server's responses]
-200 [opis gry]		// Komunikat oznacza rozpoczęcie nowej gry.
-220 [pozycja]		// Nowa pozycja przeciwnika, serwer oczekuje na Twój ruch
+200 [opis gry]		// Komunikat oznacza rozpoczęcie nowej gry, należy oczekiwać koloru gracza rozmiarow planszy: "white 9 9" oraz "black 9 9"
+220 [pozycja]		// Nowa pozycja przeciwnika, serwer oczekuje na Twój ruch, zgodnie z pozycją wyzej
 230					// Wygrałeś wg. zasad
 231					// Wygrałeś przez przekroczenie czasu (przeciwnika)
 232					// Wygrałeś przez rozłączenie się przeciwnika

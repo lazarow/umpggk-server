@@ -40,6 +40,7 @@ class GameRepository extends Repository
 		const	game = this.get(gameId).value(),
 				gameController = injector.get("GameController");
 		log.info("The game #" + gameId + " (the match #" + game.matchId + ") has been started");
+		playerRepository.onTheMove(game[gameController.whoFirst()], true);
 		playerRepository.setCurrentGame(game.white, game.id);
 		playerRepository.setCurrentGame(game.black, game.id);
 		this.get(gameId).assign(this._.assign(game, {
@@ -93,6 +94,8 @@ class GameRepository extends Repository
 			this.finish(game.id, game.white === player ? game.black : game.white, player);
 			return true;
 		} else {
+			playerRepository.onTheMove(game[game.currentPlayer], false);
+			playerRepository.onTheMove(game[game.currentPlayer === "white" ? "black" : "white"], true);
 			this.get(gameId).assign(this._.assign(game, {
 				currentPlayer: game.currentPlayer === "white" ? "black" : "white",
 				state: state,
@@ -118,6 +121,8 @@ class GameRepository extends Repository
 				finishedAt 		= (new Date()).getTime(),
 				matchRepository	= require("./match-repository.js");
 		log.colors("yellow").info("The game #" + gameId + " (the match #" + game.matchId + ") has been finished");
+		playerRepository.onTheMove(game.white, false);
+		playerRepository.onTheMove(game.black, false);
 		playerRepository.setCurrentGame(game.white, null);
 		playerRepository.setCurrentGame(game.black, null);
 		this.get(gameId).assign(this._.assign(game, {
@@ -133,7 +138,9 @@ class GameRepository extends Repository
 			require("./match-repository.js").addPoints(game.matchId, game.black, 0.5);
 		}
 		// Start the next game of finish the match
-		require("./match-repository.js").startUncompletedGame(game.matchId);
+		setTimeout(function () {
+			require("./match-repository.js").startUncompletedGame(game.matchId);
+		}, 50)
 	}
 }
 

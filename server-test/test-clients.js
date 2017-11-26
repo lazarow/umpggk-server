@@ -26,10 +26,10 @@ for (let i = 0; i < numberOfClients; ++i) {
 	let
 		client	= new net.Socket(),
 		name 	= namesGenerator().replace(" ", "");
-	log.info("The test client " + name + " has been created");
+	log.info(name + " has been created");
 	client.setNoDelay();
 	client.connect(port, host, function() {
-		log.info("The test client " + name + " has been connected to the server successfully");
+		log.info(name + " has been connected to the server successfully");
 		// Say Hi
 		client.write("100 " + name);
 	});
@@ -37,11 +37,14 @@ for (let i = 0; i < numberOfClients; ++i) {
 		const message = data.toString("utf8");
 		log.info(name, message);
 		if (message.substr(0, 3) === "200") {
-			log.info("The test client " + name + " has been sent a move");
-			this.write("210 my new move");
+			const parts = message.split(" ");
+			//if (parts[1] === "white") {
+			log.info(name + " has been sent a move");
+			client.write("210 my new move");
+			//}
 		}
 	});
 	client.on("close", function() {
-		log.info("The test client " + name + " has been disconnected");
+		log.info(name + " has been disconnected");
 	});
 }

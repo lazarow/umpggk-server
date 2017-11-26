@@ -53,14 +53,17 @@ class TournamentRepository extends Repository
 	startNextRound() {
 		const 	roundCompositor = injector.get("RoundCompositor"),
 				round = roundCompositor.composeNextRound();
+		// Close registration if it is opened
 		if (this.isRegistrationOpen()) {
 			this.closeRegistration();
 		}
+		// If round has matches
 		if (round !== null) {
 			this.get().assign(this._.assign(
 				this.get().value(),
 				{ rounds: this.get().value().rounds.concat(round.id) }
 			)).write();
+			this.setCurrentRound(round.id);
 			require("./round-repository.js").start(round.id);
 		}
 		return round;

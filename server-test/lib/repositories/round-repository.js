@@ -26,7 +26,6 @@ class RoundRepository extends Repository
 	}
 	start(roundId) {
 		log.info("The round #" + roundId + " has been started");
-		tournamentRepository.setCurrentRound(roundId);
 		this.get(roundId).assign(this._.assign(this.get(roundId).value(), {startedAt: (new Date()).getTime()})).write();
 		this.startUncompletedMatches(roundId);
 	}
