@@ -1,11 +1,10 @@
 const router = new VueRouter({
     routes: [
-        {path: '/admin', component: admin},
-        {path: '/home', component: home},
+        {path: '/admin', component: Vue.component('admin')},
+        {path: '/home', component: Vue.component('home')},
 
     ]
 });
-
 
 const app = new Vue({
     router,

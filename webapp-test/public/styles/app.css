@@ -2,3 +2,26 @@ body {
     padding: 30px 0;
     font-family: 'Ubuntu Condensed', sans-serif;
 }
+
+
+/*region connection icon*/
+@keyframes connection {
+    from {opacity: 0.6;}
+    to {opacity: 0.4;}
+}
+.connection{
+    display: block;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    opacity: 0.6;
+/*    animation: connection infinite 2s alternate;*/
+}
+.disconnected{
+    background: red;
+}
+.connected{
+    background: green;
+}
+
+/*endregion*/

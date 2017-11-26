@@ -1,4 +1,4 @@
-let admin = {
+Vue.component('admin',{
     template: `
 <div class="panel panel-warning">
     <div class="panel-heading">Panel zarządzania turniejem</div>
@@ -25,25 +25,27 @@ let admin = {
             axios.get('http://'+location.hostname+':8001/tournament/start-next-round?token='+this.token);
         }
     }
-};
+});
 
 Vue.component('dump-data', {
     props: ['data'],
     template: `<pre>{{data}}</pre>`,
 });
 
-
-
-
-let player = {
+Vue.component('player',{
     props: ['player','index'],
-    template:
-    '<tr><td>{{index}}</td>' +
-    '<td>{{player.name}}</td>' +
-    '<td>{{player.points}}</td></tr>'
-};
+    template:`
+        <tr><td>{{index}}</td>
+    <td>{{player.name}}</td>
+    <td>{{player.points}}</td>
+    <td>{{player.sos}}</td>
+    <td>{{player.sosos}}</td>
+    <td>{{player.sodos}}</td>
+    <td><span :class="[player.connected ? 'connected' : 'disconnected', 'connection']"></td></tr>
+    `
+});
 
-let home = {
+Vue.component('home',{
     template: `
     <div class='panel panel-default'>
         <div class="panel-heading">Tablica wyników</div>
@@ -51,30 +53,35 @@ let home = {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Gracz 1</th>
-                    <th>Gracz 2</th>
-                    <th>Wynik</th>
-                    <th>Zwycięzca</th>
+                    <th>Gracz</th>
+                    <th>Pkt</th>
+                    <th>Sos</th>
+                    <th>Sosos</th>
+                    <th>Sodos</th>
+                    <th>Poł.</th>
                 </tr>
             </thead>
             <tbody>
+                     <tr is="player" v-for="(player, index) in scoreboard($parent.players)" :key="player.playerId" :player="player"></tr>
             </tbody>
         </table>
-        <div>{{players}}</div>
     </div>
     `,
     methods:{
         scoreboard: function (players) {
             return _.orderBy(players,['points','name'],['desc'])
         },
+        cos: function(){
+            console.log(this.$parent.tournament);
+        }
     },
     components: {
-        player: player
+        player: Vue.component('player'),
     },
     data: function () {
         return {
             players: this.$parent.players
         }
     }
-};
+});
 
