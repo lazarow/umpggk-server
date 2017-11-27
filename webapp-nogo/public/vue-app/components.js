@@ -32,6 +32,8 @@ Vue.component('dump-data', {
     template: `<pre>{{data}}</pre>`,
 });
 
+
+
 Vue.component('player',{
     props: ['player','index'],
     template:`
@@ -41,7 +43,8 @@ Vue.component('player',{
     <td>{{player.sos}}</td>
     <td>{{player.sosos}}</td>
     <td>{{player.sodos}}</td>
-    <td><span :class="[player.connected ? 'connected' : 'disconnected', 'connection']"></td></tr>
+    <td>{{player.matches.length}}</td>
+    <td><span :class="[player.connected ? 'connected' : 'disconnected', 'connection']"></span></td></tr>
     `
 });
 
@@ -58,6 +61,7 @@ Vue.component('home',{
                     <th>Sos</th>
                     <th>Sosos</th>
                     <th>Sodos</th>
+                    <th>L.meczy</th>
                     <th>Poł.</th>
                 </tr>
             </thead>
@@ -84,4 +88,3 @@ Vue.component('home',{
         }
     }
 });
-

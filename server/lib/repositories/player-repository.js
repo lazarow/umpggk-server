@@ -44,7 +44,8 @@ class PlayerRepository extends Repository
 			currentOpponent: null,
 			currentMatch: null,
             currentGame: null,
-			onTheMove: false // Checks if we wait for a player's move
+			onTheMove: false, // Checks if we wait for a player's move
+			hasBye: false
         };
         this.collection().push(player).write();
 		return player;
@@ -68,6 +69,10 @@ class PlayerRepository extends Repository
 	        connected: false,
 	        connectedAt: null
         })).write();
+		if (player.value().currentGame !== null) {
+			// Finish the current game
+			require("./game-repository.js").disconnect(player.value().currentGame, player.value().name);
+		}
     }
 	// Setters
 	addOpponent(name, opponentId) {
@@ -116,6 +121,13 @@ class PlayerRepository extends Repository
 		this.get(name).assign(this._.assign(
 			this.get(name).value(),
 			{ onTheMove: isOnTheMove }
+		)).write();
+	}
+	bye(name) {
+		this.addPoints(name, 1); // one point for bye
+		this.get(name).assign(this._.assign(
+			this.get(name).value(),
+			{ hasBye: true }
 		)).write();
 	}
 	// Points and tie-breakers

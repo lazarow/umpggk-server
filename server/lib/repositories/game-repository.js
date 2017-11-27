@@ -7,7 +7,8 @@ const	Repository				= require("./repository.js"),
 class GameRepository extends Repository
 {
 	constructor() {
-		super("games")
+		super("games");
+		this.timeChecker = null;
 	}
 	get(gameId) {
 		return this.collection().find({ id: gameId });
@@ -125,6 +126,11 @@ class GameRepository extends Repository
 			return true;
 		}
 	}
+	// Called when a player is disconnected
+	disconnect(gameId, player) {
+		playerRepository.write(game.white === player ? game.black : game.white, "232");
+		this.finish(game.id, game.white === player ? game.black : game.white, player);
+	}
 	finish(gameId, winner, loser) {
 		const	game 			= this.get(gameId).value(),
 				startedAt 		= game.startedAt,
@@ -150,7 +156,31 @@ class GameRepository extends Repository
 		// Start the next game of finish the match
 		setTimeout(function () {
 			require("./match-repository.js").startUncompletedGame(game.matchId);
-		}, 25)
+		}, 25);
+	}
+	startTimeChecker() {
+		if (this.timeChecker !== null) {
+			return;
+		}
+		const $this = this;
+		this.timeChecker = setInterval(function () {
+			let checked = 0;
+			$this.collection().forEach(function (game) {
+				if (game.finishedAt === null && game.startedAt !== null) {
+					if ((new Date()).getTime() > game.time) {
+						playerRepository.write(game[game.currentPlayer === "white" ? "black" : "white"], "231");
+						playerRepository.write(game[game.currentPlayer], "241");
+						this.finish(
+							game.id,
+							game[game.currentPlayer === "white" ? "black" : "white"],
+							game[game.currentPlayer]
+						);
+					}
+					checked++;
+				}
+			}, this);
+			log.debug("Checking time limits for ongoing games (" + checked + ")");
+		}, 2000);
 	}
 }
 

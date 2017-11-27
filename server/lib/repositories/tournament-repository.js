@@ -62,6 +62,7 @@ class TournamentRepository extends Repository
 		}
 		// If round has matches
 		if (round !== null) {
+			require("./game-repository.js").startTimeChecker(); // run time limits checker
 			this.get().assign(this._.assign(
 				this.get().value(),
 				{ rounds: this.get().value().rounds.concat(round.id) }

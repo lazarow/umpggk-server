@@ -26,9 +26,8 @@
                    <div class="page-header">
                        <h1><router-link to="/">Serwer turniejowy</router-link></h1>
                    </div>
-
+                   <admin v-if="displayAdmin"></admin>
                    <router-view></router-view>
-
                    <dump-data :data="tournament"></dump-data>
                    <dump-data :data="players"></dump-data>
                    <dump-data :data="rounds"></dump-data>
