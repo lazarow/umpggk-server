@@ -1,4 +1,4 @@
-Vue.component('admin', {
+Vue.component('admin',{
     template: `
 <div class="panel panel-warning">
     <div class="panel-heading">Panel zarządzania turniejem</div>
@@ -29,5 +29,59 @@ Vue.component('admin', {
 
 Vue.component('dump-data', {
     props: ['data'],
-    template: `<pre>{{data}}</pre>`
+    template: `<pre>{{data}}</pre>`,
 });
+
+Vue.component('player',{
+    props: ['player','index'],
+    template:`
+        <tr><td>{{index}}</td>
+    <td>{{player.name}}</td>
+    <td>{{player.points}}</td>
+    <td>{{player.sos}}</td>
+    <td>{{player.sosos}}</td>
+    <td>{{player.sodos}}</td>
+    <td><span :class="[player.connected ? 'connected' : 'disconnected', 'connection']"></td></tr>
+    `
+});
+
+Vue.component('home',{
+    template: `
+    <div class='panel panel-default'>
+        <div class="panel-heading">Tablica wyników</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Gracz</th>
+                    <th>Pkt</th>
+                    <th>Sos</th>
+                    <th>Sosos</th>
+                    <th>Sodos</th>
+                    <th>Poł.</th>
+                </tr>
+            </thead>
+            <tbody>
+                     <tr is="player" v-for="(player, index) in scoreboard($parent.players)" :key="player.playerId" :player="player"></tr>
+            </tbody>
+        </table>
+    </div>
+    `,
+    methods:{
+        scoreboard: function (players) {
+            return _.orderBy(players,['points','name'],['desc'])
+        },
+        cos: function(){
+            console.log(this.$parent.tournament);
+        }
+    },
+    components: {
+        player: Vue.component('player'),
+    },
+    data: function () {
+        return {
+            players: this.$parent.players
+        }
+    }
+});
+

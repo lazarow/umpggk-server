@@ -6,6 +6,7 @@
     "lodash": "^4.17.4",
     "axios": "^0.17.1",
     "vue": "^2.5.8",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "vue-router": "^3.0.1"
   }
 }
