@@ -13,7 +13,7 @@
         "port": 6789
     },
 	"WebAppServer": {
-        "path": "./../webapp-test",
+        "path": "./../webapp-nogo",
         "port": 8000
     },
 	"AdminServer": {
