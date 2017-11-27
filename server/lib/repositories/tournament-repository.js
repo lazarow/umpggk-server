@@ -11,7 +11,7 @@ class TournamentRepository extends Repository
 		return this.collection();
 	}
 	/**
-	 * Creates a new tournament. The options contains tournament settings.
+	 * Creates a new tournament. The options should contain tournament settings.
 	 */
 	create(options) {
 		const tournament = {
@@ -24,7 +24,8 @@ class TournamentRepository extends Repository
 			registration: false,
 			// Rounds
     		rounds: [],
-			currentRound: null
+			currentRound: null,
+			additionalRounds: options.additionalRounds
         };
 		this.collection().assign(tournament).write();
 		if (config.get("Controls").registrationStart === "auto") {
@@ -45,9 +46,11 @@ class TournamentRepository extends Repository
 		return this.get().value().registration;
 	}
 	openRegistration() {
+		log.info("The registration has been opened");
 		this.get().assign(this._.assign(this.get().value(), { registration: true })).write();
 	}
 	closeRegistration() {
+		log.info("The registration has been closed");
 		this.get().assign(this._.assign(this.get().value(), { registration: false })).write();
 	}
 	startNextRound() {

@@ -65,6 +65,7 @@ class MatchRepository extends Repository
 			finishedAt: finishedAt,
 			duration: finishedAt - startedAt
 		})).write();
+		// Start next matches
 		require("./round-repository.js").startUncompletedMatches(match.roundId);
 	}
 	addGame(matchId, gameId) {

@@ -38,8 +38,10 @@ class RoundRepository extends Repository
 		allPlayersNames.forEach((name) => { playerRepository.computeSumOfOpponentsSos(name); });
 		allPlayersNames.forEach((name) => { playerRepository.computeSumOfDefetedOpponentsScores(name); });
 		if (config.get("Controls").roundsStart === "auto") {
-			tournamentRepository.setCurrentRound(null);
-			tournamentRepository.startNextRound();
+			setTimeout(function () {
+				tournamentRepository.setCurrentRound(null);
+				tournamentRepository.startNextRound();
+			}, 50);
 		}
 	}
 	// Collections

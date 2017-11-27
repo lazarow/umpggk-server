@@ -7,7 +7,7 @@
         "type": "round-robin",
 		"timeLimit": 2000,
         "gamesLimit": 3,
-		"additionalRounds": null
+		"additionalRounds": 0
 	},
 	"TournamentServer": {
         "port": 6789

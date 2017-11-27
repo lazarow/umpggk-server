@@ -42,12 +42,12 @@ Command.prototype['100'] = function (socketId, name) {
 Command.prototype['210'] = function (socketId) {
 	const   move    = Array.prototype.slice.call(arguments, 1),
             player  = playerRepository.getBySocketId(socketId),
-            game    = gameRepository.get(player.value().currentGame).value();
-	if (player.value().onTheMove === false) {
+            game    = (player === undefined) ? undefined : gameRepository.get(player.value().currentGame).value();
+	if (player !== undefined && player.value().onTheMove === false) {
 		playerRepository.write(player.value().name, "999 It is not your turn now")
 		return false;
 	}
-	return game === undefined ? false : gameRepository.move(game.id, player.value().name, move);
+	return (game === undefined) ? false : gameRepository.move(game.id, player.value().name, move);
 };
 
 module.exports = Command;
