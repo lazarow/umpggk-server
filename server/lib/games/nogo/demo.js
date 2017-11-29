@@ -7,33 +7,26 @@
 class GameStateHelper
 {
     constructor() {
-        this.shifts = { top: 10, bottom: -10, left: 1, right: -1 };
-        this.map = {
-            a: [], // chunks
-            b: [], // positions
-            c: [], // x
-            d: [], // y
-        };
-        for (let y = 0; y < 9; ++y) {
-            this.map.a[y] = []; this.map.b[y] = []; this.map.c[y] = []; this.map.d[y] = [];
-            for (let x = 0; x < 9; ++x) {
+        this.side = 9;
+        this.shifts = [10, -10, 1, -1]; // top, bottom, left, right
+        this.map = [[], []]; // chunk, position
+        for (let y = 0; y < this.side; ++y) {
+            this.map[0][y] = []; this.map[1][y] = [];
+            for (let x = 0; x < this.side; ++x) {
                 let i = y * 10 + x, j = Math.floor(i / 32), k = i - j * 32;
-                this.map.a[y][x] = j;
-                this.map.b[y][x] = k;
-                this.map.c[j][k] = x;
-                this.map.d[j][k] = y;
+                this.map[0][y][x] = j; this.map[1][y][x] = k;
             }
         }
     }
     getEmptyBoard() {
-        return [-537395713 << 0, -134348929 << 0, 33521631 << 0];
+        return [-537395713 << 0, -134348929 << 0, 33521631 << 0, 0 << 0];
+    }
+    getZerosBoard() {
+        return [0 << 0, 0 << 0, 0 << 0, 0 << 0];
     }
     getInitialState() {
-        return {
-            black: this.getEmptyBoard(),
-            white: this.getEmptyBoard(),
-            illegal: { black: [0 << 0, 0 << 0, 0 << 0], white: [0 << 0, 0 << 0, 0 << 0] }
-        };
+        // black, white, illegal for black (cache), illegal for white (cache)
+        return [this.getEmptyBoard(), this.getEmptyBoard(), this.getZerosBoard(), this.getZerosBoard()];
     }
     and(a, b) {
         return [a[0] & b[0], a[1] & b[1], a[2] & b[2], a[3] & b[3]];
@@ -46,52 +39,23 @@ class GameStateHelper
     }
     shift(a, shift) {
         if (shift >= 0) {
-            return [a[0] >>> shift | a[1] << 32 - shift, a[1] >>> shift | a[2] << 32 - shift, a[2] >>> shift | a[3] << 32 - shift, a[3] >>> shift];
+            return [
+                a[0] >>> shift | a[1] << 32 - shift,
+                a[1] >>> shift | a[2] << 32 - shift,
+                a[2] >>> shift | a[3] << 32 - shift,
+                a[3] >>> shift
+            ];
         }
-        return [a[0] << shift, a[1] << shift | a[0] >>> 32 - shift, a[2] << shift | a[1] >>> 32 - shift, a[3] << shift | a[2] >>> 32 - shift]
-    }
-    play(previousState, color, y, x) {
-        const state = {
-            black: previousState.black.slice(0),
-            white: previousState.white.slice(0),
-            illegal: { black: previousState.illegal.black.slice(0), white: previousState.illegal.white.slice(0) }
-        };
-        state[color][this.map.a[y][x]] &= ~(1 << this.map.b[y][x]);
-        // todo: check illegal moves and cached them
-        return state;
-    }
-    getLegalMoves(state, color) {
-        const moves = [];
-        let board = this.and(
-            this.and(state.white, state.black),
-            this.getIllegalMoves(state, color)
-        );
-        this.printBoard(this.getIllegalMoves(state, color));
-
-        for (let y = 0; y < 9; ++y) {
-            for (let x = 0; x < 9; ++x) {
-                if (this.isEmpty(board, y, x)) {
-                    moves.push({y: y, x: x});
-                }
-            }
-        }
-        return moves;
-    }
-    getIllegalMoves(state, color) {
-        let player = state[color], opponent = state[color === "white" ? "black" : "white"];
-        return this.or(
-            this.neg(player),
-            this.or(
-                this.shift(opponent, this.shifts.top),
-                this.or(
-                    this.shift(opponent, this.shifts.bottom),
-                    this.or(this.shift(opponent, this.shifts.left), this.shift(opponent, this.shifts.right))
-                )
-            )
-        );
+        shift = -shift;
+        return [
+            a[0] << shift,
+            a[1] << shift | a[0] >>> 32 - shift,
+            a[2] << shift | a[1] >>> 32 - shift,
+            a[3] << shift | a[2] >>> 32 - shift
+        ];
     }
     isEmpty(board, y, x) {
-        return (board[this.map.a[y][x]] & 1 << this.map.b[y][x]) !== 0;
+        return (board[this.map[0][y][x]] & 1 << this.map[1][y][x]) !== 0;
     }
     _print(something, fn) {
         console.log("  | 1 2 3 4 5 6 7 8 9");
@@ -109,8 +73,46 @@ class GameStateHelper
     }
     printState(state) {
         this._print(state, function (state, y, x) {
-            return this.isEmpty(state.black, y, x) ? (this.isEmpty(state.white, y, x) ? "." : "W") : "B";
+            return this.isEmpty(state[0], y, x) ? (this.isEmpty(state[1], y, x) ? "." : "W") : "B";
         });
+    }
+    play(previousState, color, y, x) {
+        const state = [
+            previousState[0].slice(0),
+            previousState[1].slice(0),
+            previousState[2].slice(0),
+            previousState[3].slice(0)
+        ];
+        state[color === "black" ? 0 : 1][this.map[0][y][x]] &= ~(1 << this.map[1][y][x]);
+        // Recalculating illegal moves cache
+
+        return state;
+    }
+    getIllegalMoves(player, opponent) {
+        return this.or(
+            this.neg(player),
+            this.or(
+                this.shift(opponent, this.shifts[0]),
+                this.or(
+                    this.shift(opponent, this.shifts[1]),
+                    this.or(this.shift(opponent, this.shifts[2]), this.shift(opponent, this.shifts[3]))
+                )
+            )
+        );
+    }
+    getLegalMoves(state, color) {
+        const moves = [];
+        let board = color === "black"
+            ? this.and(this.and(this.and(state[0], state[1]), this.getIllegalMoves(state[0], state[1])), this.neg(state[2]))
+            : this.and(this.and(this.and(state[0], state[1]), this.getIllegalMoves(state[1], state[0])), this.neg(state[3]));
+        for (let y = 0; y < 9; ++y) {
+            for (let x = 0; x < 9; ++x) {
+                if (this.isEmpty(board, y, x)) {
+                    moves.push({y: y, x: x});
+                }
+            }
+        }
+        return moves;
     }
 }
 
@@ -120,7 +122,12 @@ state = helper.play(state, "white", 0, 1);
 state = helper.play(state, "white", 1, 0);
 state = helper.play(state, "white", 1, 2);
 state = helper.play(state, "white", 2, 1);
+state = helper.play(state, "white", 0, 7);
+state = helper.play(state, "white", 1, 8);
+state = helper.play(state, "white", 2, 7);
+state = helper.play(state, "white", 3, 8);
 state = helper.play(state, "white", 7, 8);
 state = helper.play(state, "white", 8, 7);
-console.log(helper.getLegalMoves(state, "black"));
+state = helper.play(state, "black", 4, 4);
 helper.printState(state);
+//console.log(helper.getLegalMoves(state, "black"));
