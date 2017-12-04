@@ -22,7 +22,7 @@ class GameState
 			this.getEmptyBoard(),	// black board
 			this.getEmptyBoard(),	// white board
 			this.getOnesBoard(),	// illegal moves for black
-			this.getOnesBoard(),	// illegal moves for white
+			this.getOnesBoard()		// illegal moves for white
 		];
     }
     and(a, b) {
