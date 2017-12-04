@@ -202,18 +202,24 @@ class GameState
 
 const helper = new GameState();
 console.time("RandomGame");
-for (let i = 0; i < 800; ++i) {
+//for (let i = 0; i < 800; ++i) {
 	let state = helper.getInitialState(),
 		color = "black",
 		moves = helper.getLegalMoves(state, color);
-	while(moves.length > 0) {
+	/*while(moves.length > 0) {
 		let move = moves[Math.floor(Math.random() * moves.length)];
 		state = helper.play(state, color, move.y, move.x);
 		color = color === "black" ? "white" : "black";
 		moves = helper.getLegalMoves(state, color);
-	}
+	}*/
+	state = helper.play(state, "white", 3, 0);
+	state = helper.play(state, "white", 2, 1);
+	state = helper.play(state, "white", 1, 1);
+	state = helper.play(state, "black", 2, 0);
+	state = helper.play(state, "black", 1, 0);
+	state = helper.play(state, "black", 0, 0);
 	helper.printState(state);
-	helper.getLegalMoves(state, "black");
-	helper.getLegalMoves(state, "white")
-}
+	helper.printBoard(state[2]);
+	helper.printBoard(state[3]);
+//}
 console.timeEnd("RandomGame");

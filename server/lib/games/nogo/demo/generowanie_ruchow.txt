@@ -1,0 +1,66 @@
+[ Generowanie ruchow dla gry NoGo ]
+Autor: A.Nowakowski <arkadiusz.nowakowski@us.edu.pl>
+
+1. Założenia
+
+Ponieważ gra rozgrywana jest na planszy 9x9 co w przypadku reprezentacji bitowej daje 81, w związku
+z tym faktem założyłem, że wykorzystam 3 * 32-bitowe integer-y (jako tablice integer-ow).
+
+Plansze reprezentuje z dodatkowym bitem upraszającym przesuniecia bitowe, przez co finalna reprezentacja
+wygląda nastepująco (`0111111111` oznacza 9 pustych miejsc i miejsce po za planszą):
+11 0111111111 0111111111 0111111111 -> -537395713
+1111 0111111111 0111111111 01111111 -> -134348929
+000000 0111111111 0111111111 011111 -> 33521631
+
+// `1` oznacza pole wolne, `0` oznacza pole niedostepne
+
+Operacje bitowe takie jak &, |, ~, >>, <<< zostały zaimplementowane tak, żeby obsługiwały wcześniej
+wspomniane troj-elementowe tablice jako całą 96-bitową liczbe. W teście stosuje uproszczony zapis
+operatorow bitowych np. `a | b` oznacza `[a[0] | b[0], a[1] | b[1], a[2] | b[2]]`.
+
+2. Stan gry
+
+Stan gry reprezentowany jest jako 4-elementowa tablica, ktrej elementy kolejno oznaczają:
+- 0 plansze czarnych,
+- 1 plansze białych,
+- 2 nieprawidłowe ruchy dla czarnego,
+- 3 nieprawidłowe ruchy dla białego.
+
+Pusta plasza zainicjowana jest liczbami z pierwszego punktu tego dokumentu. Nieprawidłowe ruchy, ktore sa
+rownież 3-elementowa tablica, zainicjowane sa samymy jedynkami.
+
+3. Generacja ruchow
+
+Przez zapis nieprawidłowych ruchow (są one aktualizowane po każdym ruchu gracza) w stanie gry, generowanie
+możliwych ruchow jest bardzo proste:
+- dla czarnych: (stan[0] & stan[1]) & stan[2],
+- dla białych: (stan[0] & stan[1]) & stan[3].
+I już.
+
+4. Wykonanie ruchu
+
+Ruch składa sie z dwoch faz, w pierwszej z nich ustawiamy bit w odpowieniej planszy (z zależności od koloru).
+Druga faza to aktualizacja nielegalnych ruchow, ktora składa sie z 3 etapow:
+a. znalezienie prostych nielegalnych ruchow,
+b. znalezienie bić pojedynczych kamieni,
+c. znalezienie bić grup kamieni.
+
+a. Nielegalnych ruchem bede to określał położenie kamieni w pojedynczych oczach przeciwnika. W przykładzie
+oznaczyłem je `x`:
+
+  | 1 2 3 4 5 6 7 8 9
+--+------------------
+1 | x W . . . . . W x
+2 | W x W . . . . . W
+3 | . W . . . . . W x
+4 | . . . . . . . . W
+5 | . . . . . . . . .
+6 | . . . . . . . . .
+7 | . . . . . . . . .
+8 | . . . . . . . . W
+9 | . . . . . . . W x
+
+Dla czarnych:
+stan[2] = stan[2] & (stan[0] | stan[1] >>> 10 | stan[1] << 10 | stan[1] >>> 1 | stan[1] << 1)
+
+b. Do znalenie pojedynczych bić kamieni
