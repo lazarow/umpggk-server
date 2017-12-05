@@ -152,7 +152,7 @@ class GameState
 						}
 						chunk = this.map[0][a][b]; position = this.map[1][a][b]; c = this.clone(p);
 						c[chunk] &= ~(1 << position);
-						if (this.hasDeadGroups(o, c) || this.hasDeadGroups(c, o)) {
+						if (this.hasDeadGroups(c, o) || this.hasDeadGroups(o, c)) {
 							kills[chunk] &= ~(1 << position);
 						}
 					}
@@ -211,16 +211,67 @@ class GameState
 
 const helper = new GameState();
 console.time("RandomGame");
-for (let i = 0; i < 200; ++i) {
+//for (let i = 0; i < 800; ++i) {
 	let state = helper.getInitialState(),
 		color = "black",
 		moves = helper.getLegalMoves(state, color);
-	while(moves.length > 0) {
+	/*while(moves.length > 0) {
 		let move = moves[Math.floor(Math.random() * moves.length)];
 		state = helper.play(state, color, move.y, move.x);
 		color = color === "black" ? "white" : "black";
 		moves = helper.getLegalMoves(state, color);
-	}
-	console.log("Loser: " + color);
-}
+	}*/
+	state = helper.play(state, "white", 3, 0);
+	state = helper.play(state, "white", 2, 1);
+	state = helper.play(state, "white", 1, 1);
+	state = helper.play(state, "black", 2, 0);
+	state = helper.play(state, "black", 1, 0);
+	state = helper.play(state, "black", 0, 0);
+	state = helper.play(state, "black", 0, 6);
+	state = helper.play(state, "black", 0, 7);
+	state = helper.play(state, "black", 0, 8);
+	state = helper.play(state, "black", 1, 5);
+	state = helper.play(state, "black", 2, 6);
+	state = helper.play(state, "black", 2, 7);
+	state = helper.play(state, "black", 3, 8);
+	state = helper.play(state, "white", 1, 6);
+	state = helper.play(state, "white", 1, 7);
+	state = helper.play(state, "white", 1, 8);
+	/*state = helper.play(state, "white", 0, 1);
+	state = helper.play(state, "white", 1, 0);
+	state = helper.play(state, "white", 1, 2);
+	state = helper.play(state, "white", 2, 1);
+	state = helper.play(state, "white", 0, 7);
+	state = helper.play(state, "white", 1, 8);
+	state = helper.play(state, "white", 2, 7);
+	state = helper.play(state, "white", 3, 8);
+	state = helper.play(state, "white", 7, 8);
+	state = helper.play(state, "white", 8, 7);
+	state = helper.play(state, "white", 8, 1);
+	state = helper.play(state, "white", 7, 1);
+	state = helper.play(state, "white", 6, 1);
+	state = helper.play(state, "white", 5, 1);
+	state = helper.play(state, "white", 5, 2);
+	state = helper.play(state, "white", 5, 3);
+	state = helper.play(state, "white", 6, 3);
+	state = helper.play(state, "white", 7, 3);
+	state = helper.play(state, "white", 8, 3);
+	state = helper.play(state, "white", 4, 7);
+	state = helper.play(state, "white", 7, 6);
+	state = helper.play(state, "white", 3, 2);
+	state = helper.play(state, "black", 3, 7);
+	state = helper.play(state, "black", 6, 2);
+	state = helper.play(state, "black", 7, 2);
+	state = helper.play(state, "black", 4, 4);
+	state = helper.play(state, "black", 2, 0);
+	state = helper.play(state, "black", 0, 2);
+	state = helper.play(state, "black", 0, 3);
+	state = helper.play(state, "black", 7, 7);
+	state = helper.play(state, "black", 2, 2);
+	state = helper.play(state, "black", 3, 1);
+	state = helper.play(state, "black", 4, 2);*/
+	helper.printState(state);
+	helper.printBoard(state[2]);
+	helper.printBoard(state[3]);
+//}
 console.timeEnd("RandomGame");
