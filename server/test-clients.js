@@ -41,12 +41,15 @@ for (let i = 0; i < numberOfClients; ++i) {
 			const parts = message.split(" ");
 			this.state = gameStateHelper.getInitialState();
 			this.color = parts[1];
+			gameStateHelper.printState(this.state);
 			if (this.color === "black") {
 				const moves = gameStateHelper.getLegalMoves(this.state, this.color);
 				if (moves.length > 0) {
 					const move = moves[Math.floor(Math.random() * moves.length)];
 					this.state = gameStateHelper.play(this.state, this.color, move.y, move.x);
+					gameStateHelper.printState(this.state);
 					client.write("210 " + (move.x + 1) + " " + (move.y + 1));
+					log.info(name, "210 " + (move.x + 1) + " " + (move.y + 1));
 				}
 			}
 			gameStateHelper.printState(this.state);
@@ -59,13 +62,15 @@ for (let i = 0; i < numberOfClients; ++i) {
 				parseInt(parts[2]) - 1,
 				parseInt(parts[1]) - 1
 			);
+			gameStateHelper.printState(this.state);
 			const moves = gameStateHelper.getLegalMoves(this.state, this.color);
 			if (moves.length > 0) {
 				const move = moves[Math.floor(Math.random() * moves.length)];
 				this.state = gameStateHelper.play(this.state, this.color, move.y, move.x);
+				gameStateHelper.printState(this.state);
 				client.write("210 " + (move.x + 1) + " " + (move.y + 1));
+				log.info(name, "210 " + (move.x + 1) + " " + (move.y + 1));
 			}
-			gameStateHelper.printState(this.state);
 		}
 	});
 	client.on("close", function() {

@@ -2,7 +2,7 @@ const	Repository				= require("./repository.js"),
 		playerRepository		= require("./player-repository.js"),
 		log 					= require("./../log.js")(__filename),
 		injector				= require("./../container/injector.js"),
-		tournamentRepository	= require("./tournament-repository.js");
+		config              	= require("config");
 
 class GameRepository extends Repository
 {
@@ -23,6 +23,7 @@ class GameRepository extends Repository
 			// Statistics
 		    winner: null,
 		    loser: null,
+			wonBy: null,
 		    startedAt: null,
 		    finishedAt: null,
 		    duration: null,
@@ -53,20 +54,19 @@ class GameRepository extends Repository
 		})).write();
 		// Finish a game immediately if players are offline
 		if (playerRepository.isOnline(game.white) === false && playerRepository.isOnline(game.black) === false) {
-			this.finish(gameId, null, null);
+			this.finish(gameId, null, null, "Brak połączenia");
 		} else if (playerRepository.isOnline(game.white) === false) {
-			playerRepository.write(game.black, "232"); // disconnect win for black
+			playerRepository.write(game.black, "232", "Brak połączenia"); // disconnect win for black
 			this.finish(gameId, game.black, game.white);
 		} else if (playerRepository.isOnline(game.black) === false) {
-			playerRepository.write(game.white, "232"); // disconnect win for white
+			playerRepository.write(game.white, "232", "Brak połączenia"); // disconnect win for white
 			this.finish(gameId, game.white, game.black);
 		} else {
 			// Real game start
 			playerRepository.write(game.white, "200 white " + gameController.getGameDescription());
 			playerRepository.write(game.black, "200 black " + gameController.getGameDescription());
-			const timeLimit = tournamentRepository.get().value().timeLimit;
 			this.get(gameId).assign(this._.assign(game, {
-				time: (new Date()).getTime() + timeLimit
+				time: (new Date()).getTime() + config.get("Tournament").timeLimit
 			})).write();
 		}
 	}
@@ -85,14 +85,14 @@ class GameRepository extends Repository
 		) {
 			playerRepository.write(game.white === player ? game.black : game.white, "230"); // win if player makes a move not during his turn
 			playerRepository.write(player, "240");
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
+			this.finish(game.id, game.white === player ? game.black : game.white, player, "Wykonanie niedozwolonego ruchu");
 			return true;
 		}
 		// Checks time limit
 		if ((new Date()).getTime() > game.time) {
 			playerRepository.write(game.white === player ? game.black : game.white, "231"); // win if player makes a move after the time limit
 			playerRepository.write(player, "241");
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
+			this.finish(game.id, game.white === player ? game.black : game.white, player, "Przekroczenie czasu");
 			return true;
 		}
 		// Checks a move
@@ -100,7 +100,7 @@ class GameRepository extends Repository
 		if (state === false) { // means move is not acceptable
 			playerRepository.write(game.white === player ? game.black : game.white, "230"); // win if player makes a move not during his turn
 			playerRepository.write(player, "240");
-			this.finish(game.id, game.white === player ? game.black : game.white, player);
+			this.finish(game.id, game.white === player ? game.black : game.white, player, "Wykonanie niedozwolonego ruchu");
 			return true;
 		} else {
 			// Move is OK, play it
@@ -114,15 +114,15 @@ class GameRepository extends Repository
 		}
 		// Checks if game's finished
 		if (gameController.isFinished(state, game.currentPlayer === "white" ? "black" : "white")) {
-			playerRepository.write(player, "230"); // win if player makes a move not during his turn
+			playerRepository.write(player, "230"); // win
 			playerRepository.write(game.white === player ? game.black : game.white, "240");
-			this.finish(game.id, player, game.white === player ? game.black : game.white);
+			this.finish(game.id, player, game.white === player ? game.black : game.white, "Wygrana zgodnie z zasadami gry");
 			return true;
 		} else {
 			// or wait for teh next move
 			playerRepository.write(game.white === player ? game.black : game.white, "220 " + move.join(" "));
 			this.get(gameId).assign(this._.assign(game, {
-				time: (new Date()).getTime() + tournamentRepository.get().timeLimit
+				time: (new Date()).getTime() + config.get("Tournament").timeLimit
 			})).write();
 			return true;
 		}
@@ -130,9 +130,9 @@ class GameRepository extends Repository
 	// Called when a player is disconnected
 	disconnect(gameId, player) {
 		playerRepository.write(game.white === player ? game.black : game.white, "232");
-		this.finish(game.id, game.white === player ? game.black : game.white, player);
+		this.finish(game.id, game.white === player ? game.black : game.white, player, "Rozłączenie się zawodnika");
 	}
-	finish(gameId, winner, loser) {
+	finish(gameId, winner, loser, wonBy = "") {
 		const	game 			= this.get(gameId).value(),
 				startedAt 		= game.startedAt,
 				finishedAt 		= (new Date()).getTime(),
@@ -151,6 +151,7 @@ class GameRepository extends Repository
 		this.get(gameId).assign(this._.assign(game, {
 			winner: winner,
 			loser: loser,
+			wonBy: wonBy,
 			finishedAt: finishedAt,
 			duration: finishedAt - startedAt
 		})).write();
@@ -174,7 +175,8 @@ class GameRepository extends Repository
 						this.finish(
 							game.id,
 							game[game.currentPlayer === "white" ? "black" : "white"],
-							game[game.currentPlayer]
+							game[game.currentPlayer],
+							"Przekroczenie czasu"
 						);
 					}
 					checked++;
