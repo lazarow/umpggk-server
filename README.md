@@ -55,6 +55,14 @@ Aby uruchomić turniej (po rejestracji zawodników) należy otworzyć aplikację
 
 Kilkając _Rozpocznij kolejną rundę_ zawody się rozpoczną, kolejne rundy będą uruchamiane automatycznie (można to zmienić w konfiguracji).
 
+### Losowi gracze
+
+Serwer posiada skrypt losowych graczy (można stworzyć ich dowolną liczbę), aby ich uruchomić należy posłużyć się następującą komendą:
+```
+cd umpggk-server/server
+node test-clients.js {liczba losowych graczy}
+```
+
 ### Edycja 2017
 
 W 2017 gramy w grę NoGo, więcej informacji znajdziesz na [stronie](http://ii.us.edu.pl/umpggk2017/).
