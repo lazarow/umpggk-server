@@ -6,7 +6,7 @@
 		},
         "type": "round-robin",
 		"timeLimit": 2000,
-        "gamesLimit": 3,
+        "gamesLimit": 1,
 		"additionalRounds": 0
 	},
 	"TournamentServer": {

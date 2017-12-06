@@ -221,6 +221,7 @@ for (let i = 0; i < 200; ++i) {
 		color = color === "black" ? "white" : "black";
 		moves = helper.getLegalMoves(state, color);
 	}
+	helper.printState(state);
 	console.log("Loser: " + color);
 }
 console.timeEnd("RandomGame");

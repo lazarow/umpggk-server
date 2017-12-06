@@ -48,6 +48,7 @@ class GameRepository extends Repository
 		// Game's statistics
 		this.get(gameId).assign(this._.assign(game, {
 			currentPlayer: gameController.whoFirst(),
+			state: gameController.getInitialState(),
 			startedAt: (new Date()).getTime()
 		})).write();
 		// Finish a game immediately if players are offline
@@ -108,7 +109,7 @@ class GameRepository extends Repository
 			this.get(gameId).assign(this._.assign(game, {
 				currentPlayer: game.currentPlayer === "white" ? "black" : "white",
 				state: state,
-			    moves: game.moves.concat(move)
+			    moves: game.moves.concat([move])
 			})).write();
 		}
 		// Checks if game's finished
@@ -165,7 +166,7 @@ class GameRepository extends Repository
 		const $this = this;
 		this.timeChecker = setInterval(function () {
 			let checked = 0;
-			$this.collection().forEach(function (game) {
+			$this.collection().value().forEach(function (game) {
 				if (game.finishedAt === null && game.startedAt !== null) {
 					if ((new Date()).getTime() > game.time) {
 						playerRepository.write(game[game.currentPlayer === "white" ? "black" : "white"], "231");
@@ -178,7 +179,7 @@ class GameRepository extends Repository
 					}
 					checked++;
 				}
-			}, this);
+			}, $this);
 			log.debug("Checking time limits for ongoing games (" + checked + ")");
 		}, 2000);
 	}

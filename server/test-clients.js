@@ -2,9 +2,11 @@ const
 	net				= require("net"),
 	config			= require("config"),
 	log 			= require("./lib/log.js")(__filename),
-	namesGenerator	= require("sillyname")
+	namesGenerator	= require("sillyname"),
+	gameStateHelper	= require("./lib/games/nogo/game-state-helper.js"),
 	args			= process.argv.slice(2),
-	sleep			= require("sleep");
+	sleep			= require("sleep"),
+	names			= ["StudentA", "StudentB", "StudentC", "StudentD", "StudentE"];
 
 let
 	numberOfClients	= 1,
@@ -25,9 +27,8 @@ if (typeof args[2] !== "undefined") {
 for (let i = 0; i < numberOfClients; ++i) {
 	let
 		client	= new net.Socket(),
-		name 	= namesGenerator().replace(" ", "");
+		name 	= numberOfClients < 6 ? names[i] : namesGenerator().replace(" ", "");
 	log.info(name + " has been created");
-	client.setNoDelay();
 	client.connect(port, host, function() {
 		log.info(name + " has been connected to the server successfully");
 		// Say Hi
@@ -38,10 +39,33 @@ for (let i = 0; i < numberOfClients; ++i) {
 		log.info(name, message);
 		if (message.substr(0, 3) === "200") {
 			const parts = message.split(" ");
-			//if (parts[1] === "white") {
-			log.info(name + " has been sent a move");
-			client.write("210 my new move");
-			//}
+			this.state = gameStateHelper.getInitialState();
+			this.color = parts[1];
+			if (this.color === "black") {
+				const moves = gameStateHelper.getLegalMoves(this.state, this.color);
+				if (moves.length > 0) {
+					const move = moves[Math.floor(Math.random() * moves.length)];
+					this.state = gameStateHelper.play(this.state, this.color, move.y, move.x);
+					client.write("210 " + (move.x + 1) + " " + (move.y + 1));
+				}
+			}
+			gameStateHelper.printState(this.state);
+		}
+		if (message.substr(0, 3) === "220") {
+			const parts = message.split(" ");
+			this.state = gameStateHelper.play(
+				this.state,
+				this.color === "black" ? "white" : "black",
+				parseInt(parts[2]) - 1,
+				parseInt(parts[1]) - 1
+			);
+			const moves = gameStateHelper.getLegalMoves(this.state, this.color);
+			if (moves.length > 0) {
+				const move = moves[Math.floor(Math.random() * moves.length)];
+				this.state = gameStateHelper.play(this.state, this.color, move.y, move.x);
+				client.write("210 " + (move.x + 1) + " " + (move.y + 1));
+			}
+			gameStateHelper.printState(this.state);
 		}
 	});
 	client.on("close", function() {
