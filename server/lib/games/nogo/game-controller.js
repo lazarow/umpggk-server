@@ -7,7 +7,7 @@ class GameController extends BaseGameController
 		return "black";
 	}
 	getGameDescription() {
-		return "nogo 9 9";
+		return "9 9";
 	}
 	getInitialState() {
 		return gameStateHelper.getInitialState();
