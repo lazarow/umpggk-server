@@ -34,11 +34,14 @@ Protokół komunikacyjny oparty jest o standardowe gniazdka sieciowe, każda kom
 
 ##### Żądania klient (wysyłają programy grające w turnieju)
 
+```
 100 [nazwa_gracza]	// Podłącz się jako gracz, nazwa gracza nie może zawierać białych znakow
 210 [pozycja]		// Wyślij ruch, gdzie pozycja to wspolrzdne "X Y" (spacja w środku) liczone od lewego gornego rogu tj. punktu "1 1" do prawego dolnego "9 9"
+```
 
 ##### Odpowiedzi serwera
 
+```
 200 [opis gry]		// Komunikat oznacza rozpoczęcie nowej gry, należy oczekiwać koloru gracza rozmiarow planszy: "white 9 9" oraz "black 9 9"
 220 [pozycja]		// Nowa pozycja przeciwnika, serwer oczekuje na Twój ruch, zgodnie z pozycją wyzej
 230					// Wygrałeś wg. zasad
@@ -48,16 +51,17 @@ Protokół komunikacyjny oparty jest o standardowe gniazdka sieciowe, każda kom
 241					// Przegrałeś przez przekroczenie czasu
 299 [miejsce]		// Koniec turnieju
 999	[opis]			// Błąd komendy, opis powinien wyjaśnić przyczyne
+```
 
 ### Start turnieju
 
-Aby uruchomić turniej (po rejestracji zawodników) należy otworzyć aplikację webową w trybie administracyjnym. Standardowy adres aplikacji to [http://localhost:8000/?admin=](http://localhost:8000/?admin=).
+Aby uruchomić turniej (po rejestracji zawodników) należy otworzyć aplikację webową w trybie administracyjnym. Standardowy adres aplikacji w tym trybie to [http://localhost:8000/?admin=](http://localhost:8000/?admin=).
 
-Kilkając _Rozpocznij kolejną rundę_ zawody się rozpoczną, kolejne rundy będą uruchamiane automatycznie (można to zmienić w konfiguracji).
+Kilkając _Rozpocznij kolejną rundę_ zawody wystartują, kolejne rundy turnieju będą uruchamiane automatycznie (można to zmienić w konfiguracji).
 
 ### Losowi gracze
 
-Serwer posiada skrypt losowych graczy (można stworzyć ich dowolną liczbę), aby ich uruchomić należy posłużyć się następującą komendą:
+Serwer posiada implementację losowych graczy (można stworzyć ich dowolną liczbę), aby ich uruchomić należy posłużyć się następującą komendą:
 ```
 cd umpggk-server/server
 node test-clients.js {liczba losowych graczy}
@@ -66,3 +70,9 @@ node test-clients.js {liczba losowych graczy}
 ### Edycja 2017
 
 W 2017 gramy w grę NoGo, więcej informacji znajdziesz na [stronie](http://ii.us.edu.pl/umpggk2017/).
+
+### ToDO
+
+Serwer jest w pełni sprawny w kwesti rozgrywania zawodów, jednakże jest jeszcze kilka rzeczy, które uprzyjemnią rozgrywkę:
+- poprawienie wizualizacji w aplikacji webowej,
+- losowi gracze w innych językach niż JavaScript.
