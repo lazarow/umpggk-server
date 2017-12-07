@@ -225,3 +225,31 @@ for (let i = 0; i < 200; ++i) {
 	console.log("Loser: " + color);
 }
 console.timeEnd("RandomGame");
+
+/**
+| 1 2 3 4 5 6 7 8 9
+--+------------------
+1 | B B B W W W . W B
+2 | B B W W B B B W .
+3 | W B . B . B . B W
+4 | W W W W B . B . B
+5 | B . W W B B . B .
+6 | W B W W W B B . B
+7 | W W . B W B W B W
+8 | B B B W B B W W W
+9 | W W W . B W . B W
+
+| 1 2 3 4 5 6 7 8 9
+--+------------------
+1 | B B B W W W W W B
+2 | B B W W B B B W .
+3 | W B . B . B . B W
+4 | W W W W B . B . B
+5 | B . W W B B . B .
+6 | W B W W W B B . B
+7 | W W . B W B W B W
+8 | B B B W B B W W W
+9 | W W W . B W . B W
+07/07/2017 14:53:43.817 - [test-clients.js] Info: StudentA 210 7 1
+07/07/2017 14:53:43.832 - [test-clients.js] Info: StudentA 230
+*/

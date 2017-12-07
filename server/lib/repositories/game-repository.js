@@ -72,7 +72,8 @@ class GameRepository extends Repository
 	}
 	move(gameId, player, move) {
 		const 	game 			= this.get(gameId).value(),
-				gameController 	= injector.get("GameController");
+				gameController 	= injector.get("GameController"),
+				currentPlayer	= game.currentPlayer;
 		// Checks game's statistics
 		if (game.startedAt === null || game.finishedAt !== null) {
 			playerRepository.write(player, "999 The game is not started or it is finished already");
@@ -80,8 +81,8 @@ class GameRepository extends Repository
 		}
 		// Chacks players' turns
 		if (
-			(game.white === player && game.currentPlayer === "black")
-			|| (game.black === player && game.currentPlayer === "white")
+			(game.white === player && currentPlayer === "black")
+			|| (game.black === player && currentPlayer === "white")
 		) {
 			playerRepository.write(game.white === player ? game.black : game.white, "230"); // win if player makes a move not during his turn
 			playerRepository.write(player, "240");
@@ -104,16 +105,16 @@ class GameRepository extends Repository
 			return true;
 		} else {
 			// Move is OK, play it
-			playerRepository.onTheMove(game[game.currentPlayer], false);
-			playerRepository.onTheMove(game[game.currentPlayer === "white" ? "black" : "white"], true);
+			playerRepository.onTheMove(game[currentPlayer], false);
+			playerRepository.onTheMove(game[currentPlayer === "white" ? "black" : "white"], true);
 			this.get(gameId).assign(this._.assign(game, {
-				currentPlayer: game.currentPlayer === "white" ? "black" : "white",
+				currentPlayer: currentPlayer === "white" ? "black" : "white",
 				state: state,
 			    moves: game.moves.concat([move])
 			})).write();
 		}
 		// Checks if game's finished
-		if (gameController.isFinished(state, game.currentPlayer === "white" ? "black" : "white")) {
+		if (gameController.isFinished(state, currentPlayer === "white" ? "black" : "white")) {
 			playerRepository.write(player, "230"); // win
 			playerRepository.write(game.white === player ? game.black : game.white, "240");
 			this.finish(game.id, player, game.white === player ? game.black : game.white, "Wygrana zgodnie z zasadami gry");
@@ -168,14 +169,15 @@ class GameRepository extends Repository
 		this.timeChecker = setInterval(function () {
 			let checked = 0;
 			$this.collection().value().forEach(function (game) {
+				const currentPlayer = game.currentPlayer;
 				if (game.finishedAt === null && game.startedAt !== null) {
 					if ((new Date()).getTime() > game.time) {
-						playerRepository.write(game[game.currentPlayer === "white" ? "black" : "white"], "231");
-						playerRepository.write(game[game.currentPlayer], "241");
+						playerRepository.write(game[currentPlayer === "white" ? "black" : "white"], "231");
+						playerRepository.write(game[currentPlayer], "241");
 						this.finish(
 							game.id,
-							game[game.currentPlayer === "white" ? "black" : "white"],
-							game[game.currentPlayer],
+							game[currentPlayer === "white" ? "black" : "white"],
+							game[currentPlayer],
 							"Przekroczenie czasu"
 						);
 					}

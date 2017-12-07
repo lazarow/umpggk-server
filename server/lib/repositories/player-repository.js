@@ -63,16 +63,19 @@ class PlayerRepository extends Repository
     }
     disconnect(socketId) {
 		const player = this.collection().find({socketId: socketId});
-        player.assign(this._.assign(player.value(), {
+		if (player.value() == undefined) {
+			return;
+		}
+		if (player.value().currentGame !== null) {
+			// Finish the current game
+			require("./game-repository.js").disconnect(player.value().currentGame, player.value().name);
+		}
+		player.assign(this._.assign(player.value(), {
 			socketId: null,
 			remoteAddress: null,
 	        connected: false,
 	        connectedAt: null
         })).write();
-		if (player.value().currentGame !== null) {
-			// Finish the current game
-			require("./game-repository.js").disconnect(player.value().currentGame, player.value().name);
-		}
     }
 	// Setters
 	addOpponent(name, opponentId) {
