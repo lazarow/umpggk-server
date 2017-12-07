@@ -5,7 +5,6 @@ const
 	namesGenerator	= require("sillyname"),
 	gameStateHelper	= require("./lib/games/nogo/game-state-helper.js"),
 	args			= process.argv.slice(2),
-	sleep			= require("sleep"),
 	names			= ["StudentA", "StudentB", "StudentC", "StudentD", "StudentE"];
 
 let
