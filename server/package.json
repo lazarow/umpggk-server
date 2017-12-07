@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bower": "^1.8.2",
     "color-logs": "^0.6.1",
     "config": "^1.28.1",
     "cors": "^2.8.4",
