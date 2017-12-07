@@ -9,7 +9,6 @@
     "node-di-container": "^0.1.7",
     "shortid": "^2.2.8",
     "sillyname": "^0.1.0",
-    "sleep": "^5.1.1",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {
