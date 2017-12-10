@@ -26,7 +26,7 @@ if (typeof args[2] !== "undefined") {
 for (let i = 0; i < numberOfClients; ++i) {
 	let
 		client	= new net.Socket(),
-		name 	= numberOfClients < 6 ? names[i] : namesGenerator().replace(" ", "");
+		name 	= numberOfClients == 1 ? "js-test-client" : (numberOfClients < 6 ? names[i] : namesGenerator().replace(" ", ""));
 	log.info(name + " has been created");
 	client.connect(port, host, function() {
 		log.info(name + " has been connected to the server successfully");
