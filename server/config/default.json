@@ -6,7 +6,7 @@
 		},
         "type": "round-robin",
 		"timeLimit": 2000,
-        "gamesLimit": 1,
+        "gamesLimit": 10,
 		"additionalRounds": 0
 	},
 	"TournamentServer": {
@@ -37,6 +37,6 @@
     },
 	"Controls": {
 		"registrationStart": "auto",
-		"roundsStart": "auto"
+		"roundsStart": "manual"
 	}
 }

@@ -72,6 +72,12 @@ class TournamentRepository extends Repository
 		}
 		return round;
 	}
+	restartLastRound() {
+		const rounds = this.get().value().rounds;
+		if (rounds.length > 0) {
+			require("./round-repository.js").restart(rounds[rounds.length - 1]);
+		}
+	}
 }
 
 module.exports = new TournamentRepository();

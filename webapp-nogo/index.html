@@ -9,14 +9,14 @@
         <!-- Styles -->
         <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="public/bower/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="public/bower/bootstrap/dist/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="public/styles/app.css">
         <!-- Required libraries -->
         <script src="public/bower/socket.io-client/dist/socket.io.slim.js"></script>
         <script src="public/bower/lodash/dist/lodash.js"></script>
         <script src="public/bower/axios/dist/axios.js"></script>
         <script src="public/bower/vue/dist/vue.js"></script>
-        <script src="public/bower/vue-router/dist/vue-router.js"></script>
     </head>
     <body>
 
@@ -24,15 +24,13 @@
             <div class="row">
                <div id="webapp" class="col-xs-12">
                    <div class="page-header">
-                       <h1><router-link to="/">Serwer turniejowy</router-link></h1>
+                       <h1>Serwer turniejowy</h1>
                    </div>
                    <admin v-if="displayAdmin"></admin>
-                   <router-view></router-view>
-                   <dump-data :data="tournament"></dump-data>
-                   <dump-data :data="players"></dump-data>
-                   <dump-data :data="rounds"></dump-data>
-                   <dump-data :data="matches"></dump-data>
-                   <dump-data :data="games"></dump-data>
+				   <scoreboard :players="players"></scoreboard>
+				   <round v-if="tournament.currentRound != null" :round="rounds[tournament.currentRound]" :matches="matches" title="Trwająca runda" color="primary"></round>
+				   <round v-for="round in rounds" :key="round.id" v-if="round.matches.length > 0" :round="round" :matches="matches" title="Runda" color="default"></round>
+				   <games :games="games" v-if="games.length > 0"></games>
                </div>
             </div>
         </div>

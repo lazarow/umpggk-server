@@ -35,6 +35,19 @@ class MatchRepository extends Repository
 		playerRepository.addMatch(blueId, match.id);
 		return match;
 	}
+	restart(matchId) {
+		const match = this.get(matchId).value();
+		this.get(matchId).assign(this._.assign(match, {
+			redPoints: 0,
+		    bluePoints: 0,
+			startedAt: null,
+		    finishedAt: null,
+	    	duration: null,
+		})).write();
+		for (let gameId of match.games) {
+			 gameRepository.restart(gameId);
+		}
+	}
 	start(matchId) {
 		const match = this.get(matchId).value();
 		log.info("The match #" + matchId + " (the round #" + match.roundId + ") has been started");

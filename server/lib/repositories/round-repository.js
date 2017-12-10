@@ -24,6 +24,19 @@ class RoundRepository extends Repository
 		this.collection().push(round).write();
 		return round;
 	}
+	restart(roundId) {
+		tournamentRepository.setCurrentRound(roundId);
+		const round = this.get(roundId).value();
+		this.get(roundId).assign(this._.assign(round, {
+			startedAt: null,
+		    finishedAt: null,
+		    duration: null,
+		})).write();
+		for (let matchId of round.matches) {
+			 matchRepository.restart(matchId);
+		}
+		this.start(roundId);
+	}
 	start(roundId) {
 		log.info("The round #" + roundId + " has been started");
 		this.get(roundId).assign(this._.assign(this.get(roundId).value(), {startedAt: (new Date()).getTime()})).write();

@@ -13,10 +13,14 @@ competitionServer.start(config.get("TournamentServer"));
 webAppServer.start(config.get("WebAppServer"));
 adminServer.start(config.get("AdminServer"));
 
-// Creates an empty database
-db.createEmptyDatabase();
-// Creates a new tournament based on the configuration
-tournamentRepository.create(config.get("Tournament"));
+if (args.length > 0) {
+	db.loadExistedDatabase(args[0]);
+} else {
+	// Creates an empty database
+	db.createEmptyDatabase();
+	// Creates a new tournament based on the configuration
+	tournamentRepository.create(config.get("Tournament"));
+}
 
 // Load commands protocol
 container.value("Command", require("./lib/games/" + tournamentRepository.get().value().game.name + "/command.js"));

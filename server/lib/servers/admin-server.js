@@ -35,6 +35,11 @@ AdminServer.prototype.start = function (options) {
 		tournamenRepository.startNextRound();
 		res.status(200).send("");
 	});
+	// Restart the last round
+	app.get('/tournament/restart-last-round', (req, res) => {
+		tournamenRepository.restartLastRound();
+		res.status(200).send("");
+	});
 	app.listen(options.port, () => log.colors("magenta").info("The admin server is listening on port: " + options.port));
 };
 

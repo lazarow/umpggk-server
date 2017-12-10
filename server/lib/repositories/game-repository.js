@@ -31,12 +31,31 @@ class GameRepository extends Repository
 			currentPlayer: null,
 			time: null,
 		    state: null,
-		    moves: []
+		    moves: [],
+			times: [],
+			lastMoveTime: null
         };
 		this.collection().push(game).write();
 		playerRepository.addGame(whiteId, game.id);
 		playerRepository.addGame(blackId, game.id);
 		return game;
+	}
+	restart(gameId) {
+		const game = this.get(gameId).value();
+		this.get(gameId).assign(this._.assign(game, {
+			winner: null,
+		    loser: null,
+			wonBy: null,
+		    startedAt: null,
+		    finishedAt: null,
+		    duration: null,
+			currentPlayer: null,
+			time: null,
+		    state: null,
+		    moves: [],
+			times: [],
+			lastMoveTime: null
+		})).write();
 	}
 	start(gameId) {
 		const	game = this.get(gameId).value(),
@@ -50,7 +69,8 @@ class GameRepository extends Repository
 		this.get(gameId).assign(this._.assign(game, {
 			currentPlayer: gameController.whoFirst(),
 			state: gameController.getInitialState(),
-			startedAt: (new Date()).getTime()
+			startedAt: (new Date()).getTime(),
+			lastMoveTime: (new Date()).getTime()
 		})).write();
 		// Finish a game immediately if players are offline
 		if (playerRepository.isOnline(game.white) === false && playerRepository.isOnline(game.black) === false) {
@@ -110,7 +130,9 @@ class GameRepository extends Repository
 			this.get(gameId).assign(this._.assign(game, {
 				currentPlayer: currentPlayer === "white" ? "black" : "white",
 				state: state,
-			    moves: game.moves.concat([move])
+			    moves: game.moves.concat([move]),
+				times: game.times.concat((new Date()).getTime() - game.lastMoveTime),
+				lastMoveTime: (new Date()).getTime()
 			})).write();
 		}
 		// Checks if game's finished
@@ -130,6 +152,7 @@ class GameRepository extends Repository
 	}
 	// Called when a player is disconnected
 	disconnect(gameId, player) {
+		const game = this.get(gameId).value();
 		playerRepository.write(game.white === player ? game.black : game.white, "232");
 		this.finish(game.id, game.white === player ? game.black : game.white, player, "Rozłączenie się zawodnika");
 	}
@@ -159,7 +182,7 @@ class GameRepository extends Repository
 		// Start the next game of finish the match
 		setTimeout(function () {
 			require("./match-repository.js").startUncompletedGame(game.matchId);
-		}, 25);
+		}, 50);
 	}
 	startTimeChecker() {
 		if (this.timeChecker !== null) {
