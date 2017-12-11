@@ -5,8 +5,8 @@
 			"boardSize": 9
 		},
         "type": "round-robin",
-		"timeLimit": 2000,
-        "gamesLimit": 30,
+		"timeLimit": 2100,
+        "gamesLimit": 2,
 		"additionalRounds": 0
 	},
 	"TournamentServer": {
