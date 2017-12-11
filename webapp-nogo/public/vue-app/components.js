@@ -41,14 +41,14 @@ Vue.component('scoreboard', {
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Pozycja</th>
+				<th style="width: 1%;">Pozycja</th>
 				<th>Nazwa gracza</th>
-				<th class="text-right">L. punktów</th>
-				<th class="text-right">SOS</th>
-				<th class="text-right">SOSOS</th>
-				<th class="text-right">SODOS</th>
-				<th class="text-right">L. meczy</th>
-				<th class="text-center">Połączenie</th>
+				<th class="text-right" style="width: 1%;">L.&nbsp;punktów</th>
+				<th class="text-right" style="width: 1%;">SOS</th>
+				<th class="text-right" style="width: 1%;">SOSOS</th>
+				<th class="text-right" style="width: 1%;">SODOS</th>
+				<th class="text-right" style="width: 1%;">L.&nbsp;meczy</th>
+				<th class="text-center" style="width: 1%;">Połączenie</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -112,7 +112,10 @@ Vue.component('games', {
 				<td class="text-left">{{game.white}}</td>
 				<td class="text-left">{{game.winner}}</td>
 				<td class="text-left">{{game.wonBy}}</td>
-				<td class="text-right">{{game.duration}}</td>
+				<td class="text-right">
+					<i class="glyphicon glyphicon-hourglass text-warning" v-if="game.startedAt != null && game.finishedAt == null"></i>
+					{{game.duration}}
+				</td>
 			</tr>
 		</tbody>
 	</table>
